@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بناء | تحدي المذاكرة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0D0B1A;
+  --card:#13111F;
+  --card2:#1A1828;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --purple:#7C6FD4;
+  --purple-l:#2D2758;
+  --purple-ll:rgba(124,111,212,0.15);
+  --teal:#26C48A;
+  --teal-l:rgba(38,196,138,0.12);
+  --red:#E8524A;
+  --red-l:rgba(232,82,74,0.15);
+  --amber:#F5A623;
+  --amber-l:rgba(245,166,35,0.12);
+  --blue:#4A9EE8;
+  --blue-l:rgba(74,158,232,0.12);
+  --pink:#E84A8C;
+  --pink-l:rgba(232,74,140,0.12);
+  --text:#F0EEF8;
+  --text2:#8B89A0;
+  --text3:#4A485A;
+  --sh:0 4px 24px rgba(0,0,0,0.4);
+  --sh2:0 8px 40px rgba(0,0,0,0.6);
+  --r:16px;
+  --r2:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:auto}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl;overflow-x:hidden}
+
+/* ── SCREENS ── */
+.screen{display:none;position:fixed;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;z-index:1}
+.screen.active{display:block}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.5)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rise{0%{transform:translateY(0);opacity:.6}100%{transform:translateY(-120vh);opacity:0}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(124,111,212,.3)}50%{box-shadow:0 0 40px rgba(124,111,212,.6)}}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes toastIn{from{transform:translateX(-50%) translateY(-70px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+@keyframes toastOut{from{transform:translateX(-50%) translateY(0);opacity:1}to{transform:translateX(-50%) translateY(-70px);opacity:0}}
+
+.fade-up{animation:fadeUp .5s ease forwards}
+.fade-up-2{animation:fadeUp .5s .1s ease both}
+.fade-up-3{animation:fadeUp .5s .2s ease both}
+
+/* ════════════════════════════════
+   LOGIN SCREEN
+════════════════════════════════ */
+#sl{
+  min-height:100vh;
+  background:radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,111,212,.25) 0%,transparent 60%),
+             radial-gradient(ellipse 60% 50% at 100% 100%, rgba(38,196,138,.1) 0%,transparent 50%),
+             var(--bg);
+  display:flex;flex-direction:column;align-items:center;
+  padding:2rem 1rem 3rem;position:relative;
+}
+.particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.pt{position:absolute;border-radius:50%;animation:rise var(--d) ease-in infinite}
+
+/* season header */
+.season-header{text-align:center;margin-bottom:1.5rem;position:relative;z-index:2}
+.season-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--purple-ll);border:0.5px solid var(--purple);
+  border-radius:30px;padding:5px 16px;font-size:11px;font-weight:700;
+  color:var(--purple);letter-spacing:.5px;margin-bottom:.75rem;
+}
+.season-title{font-size:2.2rem;font-weight:900;color:var(--text);letter-spacing:-1px;line-height:1.1;margin-bottom:.4rem}
+.season-title em{color:var(--purple);font-style:normal}
+.season-sub{font-size:13px;color:var(--text2);margin-bottom:1rem}
+.season-tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:.75rem}
+.stag{background:var(--card2);border:0.5px solid var(--border2);border-radius:20px;padding:4px 13px;font-size:11px;color:var(--text2)}
+.season-rule{font-size:11px;color:var(--text3);background:var(--card2);border:0.5px solid var(--border);border-radius:8px;padding:6px 14px;display:inline-block}
+
+/* countdown */
+.cdown{display:flex;gap:8px;justify-content:center;margin-bottom:1.5rem;position:relative;z-index:2}
+.cb{background:var(--card2);border:0.5px solid var(--border2);border-radius:12px;padding:10px 14px;min-width:60px;text-align:center}
+.cn{font-size:22px;font-weight:800;color:var(--text);display:block;font-variant-numeric:tabular-nums}
+.cl{font-size:9px;color:var(--text3);margin-top:2px;display:block}
+
+/* community dashboard (below season, above login) */
+.community-dash{
+  width:100%;max-width:440px;
+  background:var(--card);border:0.5px solid var(--border2);
+  border-radius:var(--r);padding:1.1rem;margin-bottom:1.25rem;
+  box-shadow:var(--sh);position:relative;z-index:2;
+}
+.cd-title{font-size:12px;font-weight:800;color:var(--text2);letter-spacing:.5px;margin-bottom:.85rem;display:flex;align-items:center;gap:6px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse 1.8s ease-in-out infinite;display:inline-block}
+.cd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.85rem}
+.cds{background:var(--card2);border-radius:var(--r2);padding:.7rem .5rem;text-align:center}
+.cds-num{font-size:18px;font-weight:800;color:var(--text);display:block}
+.cds-lbl{font-size:9px;color:var(--text3);margin-top:2px;display:block}
+.cd-gender{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.85rem}
+.cdg{border-radius:var(--r2);padding:.7rem .85rem;display:flex;align-items:center;gap:8px}
+.cdg.m{background:var(--blue-l);border:0.5px solid rgba(74,158,232,.2)}
+.cdg.f{background:var(--pink-l);border:0.5px solid rgba(232,74,140,.2)}
+.cdg-ico{font-size:18px}
+.cdg-num{font-size:18px;font-weight:800}
+.cdg.m .cdg-num{color:var(--blue)}.cdg.f .cdg-num{color:var(--pink)}
+.cdg-lbl{font-size:9px;color:var(--text3);margin-top:1px}
+/* mini leaderboard */
+.cd-lb-title{font-size:11px;font-weight:700;color:var(--text3);margin-bottom:.5rem}
+.cd-lb-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--border)}
+.cd-lb-row:last-child{border-bottom:none}
+.cd-lb-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.cd-lb-av.m{background:var(--blue-l)}.cd-lb-av.f{background:var(--pink-l)}
+.cd-lb-name{flex:1;font-size:12px;font-weight:700;color:var(--text)}
+.cd-lb-xp{font-size:11px;color:var(--text2)}
+
+/* login box */
+.lbox{
+  width:100%;max-width:440px;
+  background:var(--card);border:0.5px solid var(--border2);
+  border-radius:var(--r);padding:2rem 1.75rem;
+  box-shadow:var(--sh);position:relative;z-index:2;
+}
+.lbox-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:1.25rem;text-align:center}
+.flbl{font-size:11px;color:var(--text3);display:block;margin-bottom:6px;font-weight:600;letter-spacing:.3px}
+.igrid{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:1.1rem}
+.icopt{width:42px;height:42px;border-radius:50%;background:var(--card2);border:1.5px solid transparent;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all .15s}
+.icopt:hover{background:var(--purple-ll);transform:scale(1.1)}
+.icopt.sel{border-color:var(--purple);background:var(--purple-ll);box-shadow:0 0 12px rgba(124,111,212,.3)}
+.grow{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:1rem}
+.gopt{background:var(--card2);border:1.5px solid var(--border);border-radius:var(--r2);padding:.85rem .75rem;text-align:center;cursor:pointer;transition:all .15s}
+.gopt:hover{border-color:var(--border2)}
+.gopt.selm{border-color:var(--blue);background:var(--blue-l)}
+.gopt.self{border-color:var(--pink);background:var(--pink-l)}
+.gico{font-size:22px;margin-bottom:4px}
+.glbl{font-size:13px;font-weight:700;color:var(--text)}
+.gopt.selm .glbl{color:var(--blue)}.gopt.self .glbl{color:var(--pink)}
+.gsub2{font-size:10px;color:var(--text3);margin-top:2px}
+.tinp{
+  width:100%;padding:11px 14px;border-radius:var(--r2);
+  border:0.5px solid var(--border2);background:var(--card2);
+  color:var(--text);font-size:15px;font-family:'Cairo',sans-serif;
+  outline:none;transition:border-color .15s;margin-bottom:.9rem;
+}
+.tinp::placeholder{color:var(--text3)}
+.tinp:focus{border-color:var(--purple)}
+.pin-info{background:var(--amber-l);border:0.5px solid rgba(245,166,35,.25);border-radius:10px;padding:9px 13px;margin-bottom:1rem;font-size:11px;color:#C4851C;line-height:1.8}
+.err{font-size:12px;color:var(--red);text-align:center;margin-bottom:.6rem;min-height:16px}
+.mbtn{display:block;width:100%;border:none;border-radius:var(--r);padding:.9rem;font-size:15px;font-weight:700;cursor:pointer;font-family:'Cairo',sans-serif;transition:all .15s;letter-spacing:.2px}
+.mbtn.primary{background:linear-gradient(135deg,#6B5FD4,#9C8FE8);color:#fff;box-shadow:0 6px 24px rgba(107,95,212,.4)}
+.mbtn.danger{background:linear-gradient(135deg,#C4423B,#E8524A);color:#fff;box-shadow:0 6px 24px rgba(232,82,74,.4)}
+.mbtn.success{background:linear-gradient(135deg,#1A9E6E,#26C48A);color:#fff;box-shadow:0 6px 24px rgba(38,196,138,.4)}
+.mbtn:hover{opacity:.88;transform:translateY(-1px)}
+.mbtn:active{transform:scale(.98)}
+.lnote{font-size:10px;color:var(--text3);text-align:center;margin-top:.65rem}
+
+/* ════════════════════════════════
+   HOME SCREEN
+════════════════════════════════ */
+#sh{background:var(--bg);}
+.hp{max-width:480px;margin:0 auto;padding:1.25rem 1rem 6rem}
+
+/* top nav */
+.top-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1rem;
+}
+.nav-season{font-size:11px;font-weight:700;color:var(--purple);background:var(--purple-ll);padding:4px 12px;border-radius:20px}
+.nav-cd{font-size:10px;color:var(--text3)}
+
+/* user card */
+.user-card{
+  background:var(--card);border:0.5px solid var(--border2);
+  border-radius:var(--r);padding:1rem 1.1rem;
+  display:flex;align-items:center;gap:11px;
+  margin-bottom:.85rem;box-shadow:var(--sh);
+  animation:fadeUp .4s ease;
+}
+.uav{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:23px;flex-shrink:0;position:relative}
+.uav.m{background:var(--blue-l)}.uav.f{background:var(--pink-l)}
+.sdot{position:absolute;top:1px;right:1px;width:11px;height:11px;background:var(--teal);border-radius:50%;border:2px solid var(--bg);display:none;animation:blink 1.5s ease-in-out infinite}
+.uinf{flex:1;min-width:0}
+.uname{font-size:15px;font-weight:800;color:var(--text)}
+.umeta-row{display:flex;align-items:center;gap:6px;margin-top:2px;flex-wrap:wrap}
+.umeta{font-size:11px;color:var(--text2)}
+.streak-badge{font-size:10px;font-weight:700;color:var(--amber);background:var(--amber-l);padding:2px 8px;border-radius:20px;display:none}
+.lvl-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+.today-hrs{font-size:11px;font-weight:700;color:var(--teal);margin-top:3px}
+.rank-info{font-size:10px;color:var(--amber);margin-top:2px;font-weight:600}
+.uxp-txt{font-size:12px;color:var(--purple);margin-top:3px;font-weight:700}
+.xpt{background:var(--card2);border-radius:99px;height:5px;overflow:hidden;margin-top:5px}
+.xpf{height:5px;border-radius:99px;background:var(--purple);transition:width .8s ease}
+.status-inp{margin-top:7px;width:100%;padding:4px 9px;border-radius:8px;border:0.5px solid var(--border);background:var(--bg);font-size:11px;font-family:'Cairo',sans-serif;color:var(--text2);outline:none;transition:border-color .15s}
+.status-inp:focus{border-color:var(--purple)}
+.status-inp::placeholder{color:var(--text3)}
+.urank-ico{font-size:22px;flex-shrink:0}
+
+/* pulse banner */
+.pulse-banner{
+  background:linear-gradient(135deg,#1A0B3A,#0B1F2E);
+  border:0.5px solid rgba(124,111,212,.2);
+  border-radius:var(--r);padding:.85rem 1.1rem;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:.85rem;box-shadow:var(--sh);
+}
+.pb-left .pb-lbl{font-size:10px;color:rgba(255,255,255,.4);margin-bottom:3px}
+.pb-left .pb-num{font-size:20px;font-weight:800;color:#fff}
+.pb-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulse 1.8s ease-in-out infinite;margin-left:5px;vertical-align:middle}
+.pb-right{text-align:left}
+.pb-right .pb-lbl{font-size:10px;color:rgba(255,255,255,.4);margin-bottom:2px}
+.pb-right .pb-hrs{font-size:20px;font-weight:800;color:var(--teal)}
+.pb-right .pb-sub{font-size:9px;color:rgba(255,255,255,.3)}
+
+/* section label */
+.slbl{font-size:11px;font-weight:800;color:var(--text3);letter-spacing:.6px;margin-bottom:.6rem;margin-top:.25rem}
+
+/* stats row */
+.srow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.85rem}
+.scard{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r2);padding:.8rem .4rem;text-align:center;box-shadow:var(--sh)}
+.snum{font-size:17px;font-weight:800;color:var(--text);display:block}
+.slbl2{font-size:9px;color:var(--text3);margin-top:2px;display:block}
+.ssup{font-size:9px;color:var(--teal);margin-top:2px;display:block;font-weight:700}
+
+/* gender stats */
+.gstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.85rem}
+.gscard{border-radius:var(--r2);padding:.8rem .9rem;box-shadow:var(--sh)}
+.gscard.ml{background:var(--blue-l);border:0.5px solid rgba(74,158,232,.2)}
+.gscard.fm{background:var(--pink-l);border:0.5px solid rgba(232,74,140,.2)}
+.gsrow{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.gsico{font-size:14px}.gsttl{font-size:10px;font-weight:700}
+.gscard.ml .gsttl{color:var(--blue)}.gscard.fm .gsttl{color:var(--pink)}
+.gsnum{font-size:22px;font-weight:800}
+.gscard.ml .gsnum{color:var(--blue)}.gscard.fm .gsnum{color:var(--pink)}
+.gssub{font-size:9px;color:var(--text3);margin-top:1px}
+.gstrack{background:rgba(255,255,255,.06);border-radius:99px;height:4px;margin-top:8px;overflow:hidden}
+.gsfill{height:4px;border-radius:99px;transition:width 1s ease}
+.gsfill.m{background:var(--blue)}.gsfill.f{background:var(--pink)}
+
+/* activity feed */
+.feed-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:.9rem 1rem;margin-bottom:.85rem;box-shadow:var(--sh)}
+.feed-title{font-size:12px;font-weight:800;color:var(--text2);margin-bottom:.6rem}
+.feed-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:12px}
+.feed-row:last-child{border-bottom:none}
+.feed-ico{font-size:15px}.feed-name{font-weight:700;color:var(--text)}.feed-txt{color:var(--text2)}
+.feed-empty{font-size:12px;color:var(--text3);text-align:center;padding:.5rem 0}
+
+/* timer */
+.timer-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:.9rem;text-align:center;margin-bottom:.75rem;display:none;box-shadow:var(--sh)}
+.timer-big{font-size:34px;font-weight:800;color:var(--text);letter-spacing:4px;font-variant-numeric:tabular-nums}
+.timer-sub{font-size:10px;color:var(--text3);margin-top:3px}
+
+/* goal */
+.goal-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:.85rem;box-shadow:var(--sh)}
+.goal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.goal-ttl{font-size:13px;font-weight:700;color:var(--text)}
+.goal-pct{font-size:13px;font-weight:800;color:var(--teal)}
+.goal-track{background:var(--card2);border-radius:99px;height:9px;overflow:hidden;margin-bottom:6px}
+.goal-fill{height:9px;border-radius:99px;background:linear-gradient(90deg,var(--teal),#5DCAA5);transition:width 1.2s ease}
+.goal-sub{font-size:11px;color:var(--text2)}
+
+/* XP guide */
+.xp-guide{background:var(--purple-ll);border:0.5px solid rgba(124,111,212,.25);border-radius:var(--r);padding:.9rem 1rem;margin-bottom:.85rem}
+.xp-guide-title{font-size:12px;font-weight:800;color:var(--purple);margin-bottom:.5rem}
+.xp-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:11px;color:rgba(200,195,240,.8)}
+.xp-rule{padding:3px 0}
+.xp-levels{display:flex;gap:6px;flex-wrap:wrap;margin-top:.6rem}
+.xlvl{font-size:10px;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,.06);color:var(--text2)}
+
+/* challenges */
+.chgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:9px;margin-bottom:.85rem}
+.chcard{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:.9rem .6rem;text-align:center;cursor:pointer;box-shadow:var(--sh);transition:border-color .2s,transform .12s}
+.chcard:hover{transform:translateY(-3px);border-color:var(--purple)}
+.chcard.done{background:var(--teal-l);border-color:var(--teal);cursor:default}
+.chcard.done:hover{transform:none}
+.chico{font-size:22px;margin-bottom:5px}
+.chttl{font-size:11px;font-weight:700;color:var(--text);margin-bottom:3px}
+.chcard.done .chttl{color:var(--teal)}
+.chxp{font-size:10px;color:var(--text3)}
+.chcard.done .chxp{color:var(--teal);font-weight:700}
+
+/* leaderboard */
+.lb-box{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:1.1rem;margin-bottom:.85rem;box-shadow:var(--sh)}
+.lb-ttl{font-size:14px;font-weight:800;color:var(--text);margin-bottom:.75rem}
+.lbtabs{display:flex;gap:5px;margin-bottom:.6rem}
+.lbtab{flex:1;padding:6px 4px;border-radius:10px;border:0.5px solid var(--border);background:var(--card2);font-size:11px;font-weight:700;color:var(--text3);cursor:pointer;text-align:center;transition:all .15s;font-family:'Cairo',sans-serif}
+.lbtab.a-s{background:var(--amber-l);border-color:rgba(245,166,35,.3);color:var(--amber)}
+.lbtab.a-t{background:var(--teal-l);border-color:rgba(38,196,138,.3);color:var(--teal)}
+.lbtab.a-all{background:var(--purple-ll);border-color:rgba(124,111,212,.3);color:var(--purple)}
+.lbtab.a-m{background:var(--blue-l);border-color:rgba(74,158,232,.3);color:var(--blue)}
+.lbtab.a-f{background:var(--pink-l);border-color:rgba(232,74,140,.3);color:var(--pink)}
+.lb-row{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-size:14px;font-weight:800;min-width:26px;text-align:center;color:var(--text3)}
+.lb-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.lb-av.m{background:var(--blue-l)}.lb-av.f{background:var(--pink-l)}
+.lb-info{flex:1;min-width:0}
+.lb-name{font-size:13px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-name.me{font-weight:800;color:var(--purple)}
+.lb-status{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-badge{font-size:9px;padding:1px 6px;border-radius:20px;margin-left:3px;font-weight:700}
+.bdgm{background:var(--blue-l);color:var(--blue)}.bdgf{background:var(--pink-l);color:var(--pink)}
+.lb-right{flex-shrink:0;text-align:left}
+.lb-xp{font-size:11px;font-weight:700;color:var(--text2)}
+.lb-streak{font-size:10px;color:var(--amber)}
+.lb-online{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);animation:blink 1.5s ease-in-out infinite;margin-left:3px;vertical-align:middle}
+.lb-empty{text-align:center;padding:1.5rem 0;font-size:13px;color:var(--text3)}
+
+/* quote */
+.qcard{background:linear-gradient(135deg,#2D2758,#1D1A40);border-radius:var(--r);padding:1.2rem;margin-bottom:.85rem;cursor:pointer;box-shadow:var(--sh);transition:transform .15s;position:relative;overflow:hidden}
+.qcard::before{content:'"';position:absolute;top:-15px;left:10px;font-size:100px;color:rgba(255,255,255,.04);font-family:serif;line-height:1}
+.qcard:hover{transform:translateY(-2px)}
+.qtxt{font-size:14px;font-weight:600;color:var(--text);line-height:1.7;margin-bottom:.4rem;position:relative}
+.qauth{font-size:11px;color:rgba(255,255,255,.4);position:relative}
+.qhint{font-size:10px;color:rgba(255,255,255,.2);margin-top:5px;position:relative}
+
+.logout-btn{display:block;width:100%;background:transparent;border:0.5px solid var(--border);border-radius:var(--r2);padding:.65rem;font-size:12px;color:var(--text3);cursor:pointer;font-family:'Cairo',sans-serif;transition:all .15s}
+.logout-btn:hover{background:var(--card);color:var(--text2)}
+
+/* toast */
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--teal);color:#fff;padding:10px 22px;border-radius:30px;font-size:14px;font-weight:700;font-family:'Cairo',sans-serif;z-index:9999;box-shadow:0 4px 20px rgba(38,196,138,.4);direction:rtl;white-space:nowrap;transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:400px){.hp{padding:1rem .75rem 6rem}.lbox{padding:1.75rem 1.25rem}}
+</style>
+</head>
+<body>
+
+<!-- ════ LOGIN ════ -->
+<div id="sl" class="screen active">
+  <div class="particles" id="ptcl"></div>
+
+  <div class="season-header fade-up">
+    <div class="season-chip" id="s-chip">🔥 تحدي موسم الاختبارات — بناء</div>
+    <div class="season-title">موسم <em id="s-name">البداية</em></div>
+    <div class="season-sub" id="s-quote">كل نجاح بدأ بقرار — قررت الحين!</div>
+    <div class="season-tags">
+      <span class="stag">📖 ذاكر يومياً</span>
+      <span class="stag">⚡ اجمع XP</span>
+      <span class="stag">🏆 تصدر اللوحة</span>
+    </div>
+    <span class="season-rule">🏅 أعلى XP في نهاية الموسم = الفائز</span>
+  </div>
+
+  <div class="cdown fade-up-2">
+    <div class="cb"><span class="cn" id="cd-d">00</span><span class="cl">يوم</span></div>
+    <div class="cb"><span class="cn" id="cd-h">00</span><span class="cl">ساعة</span></div>
+    <div class="cb"><span class="cn" id="cd-m">00</span><span class="cl">دقيقة</span></div>
+    <div class="cb"><span class="cn" id="cd-s">00</span><span class="cl">ثانية</span></div>
+  </div>
+
+  <!-- COMMUNITY DASHBOARD -->
+  <div class="community-dash fade-up-3">
+    <div class="cd-title"><span class="live-dot"></span> داشبورد المجتمع الحين</div>
+    <div class="cd-stats">
+      <div class="cds"><span class="cds-num" id="ls-total">-</span><span class="cds-lbl">طالب سجّل</span></div>
+      <div class="cds"><span class="cds-num" style="color:var(--teal)" id="ls-hours">-</span><span class="cds-lbl">ساعة مذاكرة</span></div>
+      <div class="cds"><span class="cds-num" style="color:var(--amber)" id="ls-xp">-</span><span class="cds-lbl">إجمالي XP</span></div>
+    </div>
+    <div class="cd-gender">
+      <div class="cdg m"><span class="cdg-ico">👨‍🎓</span><div><div class="cdg-num" id="ls-male">-</div><div class="cdg-lbl">طالب</div></div></div>
+      <div class="cdg f"><span class="cdg-ico">👩‍🎓</span><div><div class="cdg-num" id="ls-female">-</div><div class="cdg-lbl">طالبة</div></div></div>
+    </div>
+    <div class="cd-lb-title">🏆 المتصدرون</div>
+    <div id="ls-lb">
+      <div style="font-size:11px;color:var(--text3);text-align:center;padding:.5rem">جارٍ التحميل...</div>
+    </div>
+  </div>
+
+  <!-- LOGIN BOX -->
+  <div class="lbox fade-up-3">
+    <div class="lbox-title">انضم للتحدي الآن ⚔️</div>
+    <span class="flbl">اختر أيقونتك</span>
+    <div class="igrid" id="igrid"></div>
+    <span class="flbl">الجنس</span>
+    <div class="grow">
+      <div class="gopt" id="gm" onclick="pickG('male')"><div class="gico">👨‍🎓</div><div class="glbl">طالب</div><div class="gsub2">ذكر</div></div>
+      <div class="gopt" id="gf" onclick="pickG('female')"><div class="gico">👩‍🎓</div><div class="glbl">طالبة</div><div class="gsub2">أنثى</div></div>
+    </div>
+    <span class="flbl">اسمك الرمزي</span>
+    <input class="tinp" id="ninp" type="text" placeholder="مثال: النمر، الفجر، الصاعق..." maxlength="20">
+    <span class="flbl">رقمك السري (4 أرقام)</span>
+    <input class="tinp" id="pinp" type="password" placeholder="رقم سري من 4 أرقام" maxlength="4" inputmode="numeric">
+    <div class="pin-info">⚠️ <strong>احفظ رقمك السري جيداً</strong> — لا يمكن استرجاعه<br>🔄 رجّاعت؟ نفس الاسم + نفس الرقم = تقدمك محفوظ</div>
+    <div class="err" id="err"></div>
+    <button class="mbtn danger" onclick="doLogin()">ادخل التحدي الآن… واثبت أنك من الأوائل 🚀</button>
+    <p class="lnote">بدون إيميل أو تسجيل • بياناتك محفوظة بالرقم السري</p>
+  </div>
+</div>
+
+<!-- ════ HOME ════ -->
+<div id="sh" class="screen">
+<div class="hp">
+
+  <!-- top nav -->
+  <div class="top-nav">
+    <div class="nav-season" id="nav-season">🌱 موسم 1 — البداية</div>
+    <div class="nav-cd" id="nav-cd"></div>
+  </div>
+
+  <!-- user card -->
+  <div class="user-card">
+    <div class="uav" id="uav"><span class="sdot" id="sdot"></span></div>
+    <div class="uinf">
+      <div class="uname" id="uname"></div>
+      <div class="umeta-row">
+        <span class="umeta" id="umeta"></span>
+        <span class="streak-badge" id="streak-b">🔥 <span id="streak-n">1</span> يوم</span>
+        <span class="lvl-badge" id="lvl-b" style="background:var(--purple-ll);color:var(--purple)">🌱 مبتدئ</span>
+      </div>
+      <div class="today-hrs" id="today-hrs">⏱ اليوم: 0 دقيقة</div>
+      <div class="rank-info" id="rank-info"></div>
+      <div class="uxp-txt" id="uxp">0 XP</div>
+      <div class="xpt"><div class="xpf" id="xpbar" style="width:0%"></div></div>
+      <input class="status-inp" id="status-inp" type="text" placeholder="💬 رسالتك التحفيزية..." maxlength="40" onchange="onStatusChange(this.value)">
+    </div>
+    <div class="urank-ico" id="urank">🌱</div>
+  </div>
+
+  <!-- pulse -->
+  <div class="pulse-banner">
+    <div class="pb-left">
+      <div class="pb-lbl">نبض المجتمع الآن</div>
+      <div class="pb-num"><span class="pb-dot"></span> <span id="pulse-n">0</span> يذاكرون معك</div>
+    </div>
+    <div class="pb-right">
+      <div class="pb-lbl">إجمالي المجتمع</div>
+      <div class="pb-hrs" id="pulse-hrs">0</div>
+      <div class="pb-sub">ساعة مذاكرة</div>
+    </div>
+  </div>
+
+  <!-- activity feed -->
+  <div class="feed-card">
+    <div class="feed-title">⚡ النشاط المباشر</div>
+    <div id="feed-list"><div class="feed-empty">كن أول المتصدرين! 🚀</div></div>
+  </div>
+
+  <!-- stats -->
+  <div class="srow">
+    <div class="scard"><span class="snum"><span class="pb-dot" style="width:6px;height:6px;margin-left:3px"></span><span id="son">0</span></span><span class="slbl2">يذاكرون الحين</span><span class="ssup" id="sdelta">ابدأ الآن!</span></div>
+    <div class="scard"><span class="snum" id="shrs">0</span><span class="slbl2">ساعة اليوم</span><span class="ssup">المجتمع كله</span></div>
+    <div class="scard"><span class="snum" id="scmp">0%</span><span class="slbl2">أكملوا تحدي</span><span class="ssup">من الكل</span></div>
+  </div>
+
+  <!-- gender -->
+  <div class="slbl">إحصائيات المجتمع</div>
+  <div class="gstats">
+    <div class="gscard ml"><div class="gsrow"><span class="gsico">👨‍🎓</span><span class="gsttl">الطلاب</span></div><div class="gsnum" id="gsm">0</div><div class="gssub">طالب انضم</div><div class="gstrack"><div class="gsfill m" id="gsmb" style="width:50%"></div></div></div>
+    <div class="gscard fm"><div class="gsrow"><span class="gsico">👩‍🎓</span><span class="gsttl">الطالبات</span></div><div class="gsnum" id="gsf">0</div><div class="gssub">طالبة انضمت</div><div class="gstrack"><div class="gsfill f" id="gsfb" style="width:50%"></div></div></div>
+  </div>
+
+  <!-- quote -->
+  <div class="qcard" onclick="nextQ()">
+    <div class="qtxt" id="qtxt"></div>
+    <div class="qauth" id="qauth"></div>
+    <div class="qhint">اضغط لاقتباس جديد</div>
+  </div>
+
+  <!-- timer -->
+  <div class="timer-card" id="tcard">
+    <div class="timer-big" id="tnum">00:00:00</div>
+    <div class="timer-sub">وقت مذاكرتك اليوم</div>
+  </div>
+  <button class="mbtn primary" id="sbtn" onclick="toggleStudy()" style="margin-bottom:.85rem">ابدأ المذاكرة الحين ⚡</button>
+
+  <!-- goal -->
+  <div class="slbl">هدف المجتمع</div>
+  <div class="goal-card">
+    <div class="goal-hdr">
+      <span class="goal-ttl">🎯 نوصل 200 ساعة خلال أسبوعين</span>
+      <span class="goal-pct" id="gpct">0%</span>
+    </div>
+    <div class="goal-track"><div class="goal-fill" id="gfill" style="width:0%"></div></div>
+    <span class="goal-sub" id="gsbb">0 من 200 ساعة — ابدأ وساهم!</span>
+  </div>
+
+  <!-- XP guide -->
+  <div class="xp-guide">
+    <div class="xp-guide-title">⚡ كيف تجمع XP؟</div>
+    <div class="xp-grid">
+      <div class="xp-rule">📖 كل 30 دقيقة مذاكرة = +25 XP</div>
+      <div class="xp-rule">✅ إكمال تحدي يومي = نقاط إضافية</div>
+    </div>
+    <div class="xp-levels">
+      <span class="xlvl">🌱 مبتدئ 0+</span>
+      <span class="xlvl">⭐ ملتزم 200+</span>
+      <span class="xlvl">🏆 محترف 500+</span>
+      <span class="xlvl">👑 أسطورة 1000+</span>
+    </div>
+  </div>
+
+  <!-- challenges -->
+  <div class="slbl">تحديات اليوم</div>
+  <div class="chgrid" id="chgrid"></div>
+
+  <!-- leaderboard -->
+  <div class="lb-box">
+    <div class="lb-ttl">🏆 لوحة المتصدرين</div>
+    <div class="lbtabs">
+      <button class="lbtab a-s" id="t-s" onclick="switchLbType('season')">🏆 موسمي</button>
+      <button class="lbtab" id="t-t" onclick="switchLbType('total')">📊 إجمالي</button>
+    </div>
+    <div class="lbtabs">
+      <button class="lbtab a-all" id="t-all" onclick="switchTab('all')">الكل</button>
+      <button class="lbtab" id="t-m" onclick="switchTab('male')">الطلاب 👨‍🎓</button>
+      <button class="lbtab" id="t-f" onclick="switchTab('female')">الطالبات 👩‍🎓</button>
+    </div>
+    <div id="lb-list"></div>
+  </div>
+
+  <button class="logout-btn" onclick="doLogout()">تغيير الاسم الرمزي</button>
+
+</div><!-- hp -->
+</div><!-- sh end -->
+
+
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════
+const SHEET_CSV  = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuljHjsYGBrOxr4GieTN6rNoAxAVLjyREu98i8ypIkH9loaZBF2oC2xuV2QKB4Epy0BWFIRULpEoPa/pub?output=csv';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdfGi86QBlPfOb8N46JcUNahzLXNtZmte3GZpDmUd-YebTPD57Ag-ZyNpy0JNY_QW7TA/exec';
+const GOAL_HRS=200;
+const ACTIVE_MS  = 3 * 60 * 1000; // 3 min
+
+// ════════════════════════════════════════
+// SEASONS
+// ════════════════════════════════════════
+const SEASONS = [
+  { num:1, name:'البداية', icon:'🌱', quote:'كل نجاح بدأ بقرار — قررت الحين!',        start:new Date('2026-05-04T00:00:00'), end:new Date('2026-05-18T00:00:00') },
+  { num:2, name:'الثبات',  icon:'📚', quote:'الاستمرار هو السر — أنت على الطريق الصح', start:new Date('2026-05-18T00:00:00'), end:new Date('2026-06-01T00:00:00') },
+  { num:3, name:'التألق',  icon:'⭐', quote:'وصلت لهنا بجهدك — الآن تلمع أكثر',       start:new Date('2026-06-01T00:00:00'), end:new Date('2026-06-15T00:00:00') },
+  { num:4, name:'الإنجاز', icon:'🎓', quote:'أكملت الرحلة — هذا النجاح ملكك أنت',    start:new Date('2026-06-15T00:00:00'), end:new Date('2026-06-29T00:00:00') },
+];
+function getCurSeason(){ const n=new Date(); for(const s of SEASONS) if(n>=s.start&&n<s.end) return s; return SEASONS[SEASONS.length-1]; }
+function getCD(s){ const d=s.end-new Date(); if(d<=0) return{d:0,h:0,m:0,s:0}; return{d:Math.floor(d/86400000),h:Math.floor((d%86400000)/3600000),m:Math.floor((d%3600000)/60000),s:Math.floor((d%60000)/1000)}; }
+const CUR = getCurSeason();
+
+// ════════════════════════════════════════
+// STATIC DATA
+// ════════════════════════════════════════
+const ICONS = ['⚡','🦁','🌙','🔥','🎯','🚀','🦅','🌟','💎','🧠','🏆','🌊'];
+const CHALLENGES = [
+  {i:'📖',t:'ذاكر ساعتين',xp:100},
+  {i:'💧',t:'8 أكواب ماء',xp:50},
+  {i:'😴',t:'نم قبل 12',xp:100},
+  {i:'📝',t:'راجع ملاحظاتك',xp:75},
+  {i:'🚶',t:'تمشية 15 دقيقة',xp:75},
+  {i:'🧘',t:'استرح 5 دقائق',xp:50},
+];
+const QUOTES = [
+  {t:'النجاح ليس نهاية الطريق، والفشل ليس نهاية العالم — الشجاعة هي الاستمرار',a:'وينستون تشرشل'},
+  {t:'الفرق بين المستحيل والممكن يكمن في عزيمة الإنسان',a:'تومي لاسوردا'},
+  {t:'لا تقارن نفسك بأحد، قارن نفسك بنفسك أمس',a:'جوردان بيترسون'},
+  {t:'كل خبير كان يوماً مبتدئاً — استمر ولا تتوقف',a:'هيلين هايز'},
+  {t:'الليالي الصعبة تصنع الأبطال الحقيقيين',a:''},
+  {t:'عقلك يستطيع تحقيق ما تؤمن به',a:'نابليون هيل'},
+  {t:'الألم مؤقت، النجاح دائم',a:''},
+];
+const MEDALS = ['🥇','🥈','🥉'];
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let selIco=ICONS[0], selGen=null, user=null;
+let doneCh=new Set(), studying=false, studySecs=0;
+let studyIv=null, syncIv=null, allUsers=[];
+let lbTab='all', lbType='season', qi=0;
+
+// ════════════════════════════════════════
+// PARTICLES
+// ════════════════════════════════════════
+const ptcl=document.getElementById('ptcl');
+['rgba(124,111,212,.5)','rgba(38,196,138,.4)','rgba(232,82,74,.4)'].forEach((clr,ci)=>{
+  for(let i=0;i<8;i++){
+    const p=document.createElement('div'); p.className='pt';
+    const sz=3+Math.random()*5;
+    p.style.cssText=`left:${10+Math.random()*80}%;bottom:${Math.random()*10}%;width:${sz}px;height:${sz}px;background:${clr};--d:${4+Math.random()*6}s;animation-delay:${Math.random()*8}s`;
+    ptcl.appendChild(p);
+  }
+});
+
+// ════════════════════════════════════════
+// SEASON UI
+// ════════════════════════════════════════
+function updSeasonUI(){
+  const s=CUR, cd=getCD(s);
+  const sn=document.getElementById('s-name'); if(sn) sn.textContent=s.name;
+  const sq=document.getElementById('s-quote'); if(sq) sq.textContent=s.quote;
+  ['d','h','m','s'].forEach(k=>{ const el=document.getElementById('cd-'+k); if(el) el.textContent=String(cd[k]).padStart(2,'0'); });
+  const ns=document.getElementById('nav-season'); if(ns) ns.textContent=s.icon+' موسم '+s.num+' — '+s.name;
+  const nc=document.getElementById('nav-cd'); if(nc) nc.textContent='ينتهي بعد '+cd.d+'ي '+String(cd.h).padStart(2,'0')+':'+String(cd.m).padStart(2,'0');
+}
+updSeasonUI(); setInterval(updSeasonUI,1000);
+
+// ════════════════════════════════════════
+// ICON GRID
+// ════════════════════════════════════════
+const ig=document.getElementById('igrid');
+ICONS.forEach(ic=>{
+  const d=document.createElement('div');
+  d.className='icopt'+(ic===selIco?' sel':''); d.textContent=ic;
+  d.onclick=()=>{ selIco=ic; document.querySelectorAll('.icopt').forEach(x=>x.classList.remove('sel')); d.classList.add('sel'); };
+  ig.appendChild(d);
+});
+function pickG(g){
+  selGen=g;
+  document.getElementById('gm').className='gopt'+(g==='male'?' selm':'');
+  document.getElementById('gf').className='gopt'+(g==='female'?' self':'');
+}
+
+// ════════════════════════════════════════
+// PARSE CSV
+// Cols: nickname(0) gender(1) ico(2) pin(3) xp(4) season_xp(5) season(6)
+//       challenges(7) study_hours(8) streak(9) last_active(10) is_studying(11) status(12)
+// ════════════════════════════════════════
+function parseCSV(txt){
+  return txt.trim().split('\n').slice(1).map(l=>{
+    const c=l.split(',');
+    return{
+      nickname:(c[0]||'').trim(), gender:(c[1]||'').trim(), ico:(c[2]||'⚡').trim(),
+      pin:(c[3]||'').trim(), xp:parseInt(c[4])||0, season_xp:parseInt(c[5])||0,
+      season:parseInt(c[6])||1, challenges:(c[7]||'').trim(),
+      study_hours:parseFloat(c[8])||0, streak:parseInt(c[9])||1,
+      last_active:(c[10]||'').trim(), is_studying:(c[11]||'').trim()==='true',
+      status:(c[12]||'').trim(),
+    };
+  }).filter(u=>u.nickname);
+}
+
+// ════════════════════════════════════════
+// LOAD SHEET
+// ════════════════════════════════════════
+async function loadSheet(){
+  try{
+    const r=await fetch(SHEET_CSV+'&t='+Date.now());
+    const txt=await r.text();
+    allUsers=parseCSV(txt);
+    if(user){
+      const me=allUsers.find(u=>u.nickname===user.name);
+      if(me){
+        user.xp=me.xp;
+        user.season_xp=(me.season===CUR.num)?me.season_xp:0;
+        user.study_hours=me.study_hours;
+        user.streak=me.streak;
+        user.status=me.status;
+        me.challenges.split('|').filter(x=>x!=='').map(Number).forEach(i=>doneCh.add(i));
+      }
+      updXP(); renderLB(); updGBars();
+    }
+    updCommunity(); updFeed(); updLoginStats();
+  }catch(e){ console.log('sheet err',e); }
+}
+
+// ════════════════════════════════════════
+// SAVE USER
+// ════════════════════════════════════════
+async function saveUser(isStudying){
+  if(!user) return;
+  const hrs=Math.round((parseFloat(user.study_hours)||0)*100)/100;
+  const params=new URLSearchParams({
+    nickname:user.name, gender:user.gender, ico:user.ico, pin:user.pin||'',
+    xp:user.xp, season_xp:user.season_xp||0, season:CUR.num,
+    challenges:[...doneCh].join('|'), study_hours:hrs,
+    streak:user.streak||1, is_studying:isStudying?'true':'false',
+    status:user.status||'', activity_type:isStudying?'start_session':'update',
+  });
+  try{ await fetch(SCRIPT_URL+'?'+params.toString(),{mode:'no-cors'}); }catch(e){}
+  localStorage.setItem('bana_u_'+user.name, JSON.stringify({
+    nickname:user.name, gender:user.gender, ico:user.ico, pin:user.pin,
+    xp:user.xp, season_xp:user.season_xp||0, study_hours:hrs,
+    streak:user.streak||1, challenges:[...doneCh].join('|'), status:user.status||''
+  }));
+}
+
+// ════════════════════════════════════════
+// LOGIN
+// ════════════════════════════════════════
+async function doLogin(){
+  const nick=document.getElementById('ninp').value.trim();
+  const pin=document.getElementById('pinp').value.trim();
+  const err=document.getElementById('err');
+  if(!selGen){ err.textContent='اختر طالب أو طالبة أولاً'; return; }
+  if(!nick){ err.textContent='اكتب اسمك الرمزي أولاً'; return; }
+  if(nick.length<2){ err.textContent='الاسم قصير — على الأقل حرفين'; return; }
+  if(!pin||pin.length!==4||isNaN(pin)){ err.textContent='الرقم السري يجب أن يكون 4 أرقام'; return; }
+  err.textContent='جاري التحقق...';
+  try{
+    const r=await fetch(SHEET_CSV+'&t='+Date.now());
+    const txt=await r.text();
+    allUsers=parseCSV(txt);
+    const existing=allUsers.find(u=>u.nickname.toLowerCase()===nick.toLowerCase());
+    if(existing){
+      if(existing.pin!==pin){ err.textContent='❌ الرقم السري غلط'; return; }
+      user={name:existing.nickname,gender:existing.gender,ico:existing.ico,pin,
+            xp:existing.xp,season_xp:(existing.season===CUR.num?existing.season_xp:0),
+            study_hours:existing.study_hours,streak:existing.streak,status:existing.status};
+      doneCh=new Set(existing.challenges.split('|').filter(x=>x!=='').map(Number));
+    } else {
+      user={name:nick,gender:selGen,ico:selIco,pin,xp:0,season_xp:0,study_hours:0,streak:1,status:''};
+      doneCh=new Set();
+    }
+  }catch(e){
+    err.textContent='';
+    const saved=localStorage.getItem('bana_u_'+nick);
+    if(saved){
+      const s=JSON.parse(saved);
+      if(s.pin!==pin){ err.textContent='❌ الرقم السري غلط'; return; }
+      user={name:s.nickname,gender:s.gender,ico:s.ico,pin,xp:s.xp,
+            season_xp:s.season_xp||0,study_hours:s.study_hours||0,streak:s.streak||1,status:s.status||''};
+      doneCh=new Set(s.challenges?s.challenges.split('|').filter(x=>x!=='').map(Number):[]);
+    } else {
+      user={name:nick,gender:selGen,ico:selIco,pin,xp:0,season_xp:0,study_hours:0,streak:1,status:''};
+      doneCh=new Set();
+    }
+  }
+  // restore today timer — handled by restoreSession() in showHome
+  studySecs=0;
+  // reset challenges if new day
+  const ck='bana_chd_'+user.name;
+  if(localStorage.getItem(ck)!==new Date().toDateString()){
+    doneCh=new Set(); localStorage.setItem(ck,new Date().toDateString());
+  }
+  err.textContent='';
+  showHome();
+}
+
+// ════════════════════════════════════════
+// SHOW HOME
+// ════════════════════════════════════════
+function showHome(){
+  document.getElementById('sl').classList.remove('active');
+  document.getElementById('sh').classList.add('active');
+  document.getElementById('sh').scrollTop=0;
+  const isM=user.gender==='male';
+  // avatar
+  const av=document.getElementById('uav');
+  av.textContent=user.ico;
+  const dot=document.createElement('span'); dot.className='sdot'; dot.id='sdot';
+  av.appendChild(dot);
+  av.className='uav '+(isM?'m':'f');
+  document.getElementById('uname').textContent=user.ico+' '+user.name;
+  document.getElementById('umeta').textContent=isM?'👨‍🎓 طالب':'👩‍🎓 طالبة';
+  // streak
+  if((user.streak||0)>1){ const sb=document.getElementById('streak-b'); if(sb){sb.style.display='inline-flex';document.getElementById('streak-n').textContent=user.streak;} }
+  // status
+  const si=document.getElementById('status-inp'); if(si&&user.status) si.value=user.status;
+  // restore previous session if exists
+  restoreSession();
+  if(studying) startStudyUI();
+  // timer display
+  updTimerDisplay();
+  updXP(); updTodayHrs(); renderCh(); renderLB(); showQ(); updGBars(); updCommunity(); updFeed();
+  // sync every 60s
+  if(syncIv) clearInterval(syncIv);
+  syncIv=setInterval(()=>{
+    if(studying){
+      user.study_hours=(parseFloat(user.study_hours)||0)+(60/3600);
+      saveUser(true);
+    }
+    loadSheet();
+  },60000);
+  loadSheet();
+}
+
+// ════════════════════════════════════════
+// LEVEL SYSTEM
+// ════════════════════════════════════════
+function getLevel(xp){
+  if(xp>=1000) return{name:'أسطورة',icon:'👑',color:'var(--amber)',bg:'var(--amber-l)',next:Infinity};
+  if(xp>=500)  return{name:'محترف', icon:'🏆',color:'var(--purple)',bg:'var(--purple-ll)',next:1000};
+  if(xp>=200)  return{name:'ملتزم', icon:'⭐',color:'var(--teal)',bg:'var(--teal-l)',next:500};
+  return             {name:'مبتدئ', icon:'🌱',color:'var(--text3)',bg:'rgba(255,255,255,.05)',next:200};
+}
+
+function getUserRank(){
+  if(!user||allUsers.length===0) return{rank:1,pct:100};
+  const sorted=[...allUsers].sort((a,b)=>b.xp-a.xp);
+  const idx=sorted.findIndex(u=>u.nickname===user.name);
+  const rank=idx===-1?sorted.length+1:idx+1;
+  const pct=Math.round(((allUsers.length-rank+1)/allUsers.length)*100);
+  return{rank,pct};
+}
+
+function updXP(){
+  const xp=user.xp;
+  const lvl=getLevel(xp);
+  const el=document.getElementById('uxp'); if(el) el.textContent=xp.toLocaleString()+' XP';
+  // level badge
+  const lb=document.getElementById('lvl-b'); if(lb){lb.textContent=lvl.icon+' '+lvl.name;lb.style.background=lvl.bg;lb.style.color=lvl.color;}
+  const ur=document.getElementById('urank'); if(ur) ur.textContent=lvl.icon;
+  // XP bar to next level
+  const minXp=xp>=500?500:xp>=200?200:xp>=0?0:0;
+  const maxXp=lvl.next===Infinity?xp:lvl.next;
+  const pct=lvl.next===Infinity?100:Math.min(Math.round(((xp-minXp)/(maxXp-minXp))*100),100);
+  const bar=document.getElementById('xpbar'); if(bar){bar.style.width=pct+'%';bar.style.background=lvl.color;}
+  // rank
+  const{rank,pct:rPct}=getUserRank();
+  const ri=document.getElementById('rank-info');
+  if(ri&&allUsers.length>0) ri.textContent='🏅 ترتيبك #'+rank+' • تتفوق على '+rPct+'% من المشاركين';
+  updTodayHrs();
+}
+
+function updTodayHrs(){
+  const el=document.getElementById('today-hrs'); if(!el) return;
+  const h=Math.floor(studySecs/3600);
+  const m=Math.floor((studySecs%3600)/60);
+  el.textContent='⏱ اليوم: '+(h>0?h+' ساعة ':'')+m+' دقيقة';
+}
+
+// ════════════════════════════════════════
+// COMMUNITY
+// ════════════════════════════════════════
+function updCommunity(){
+  const now=new Date();
+  const others=allUsers.filter(u=>u.nickname!==(user?user.name:'')&&u.last_active&&(now-new Date(u.last_active))<ACTIVE_MS);
+  const total=others.length+(studying?1:0);
+  const othHrs=allUsers.filter(u=>u.nickname!==(user?user.name:'')).reduce((s,u)=>s+u.study_hours,0);
+  const myHrs=(parseFloat(user?user.study_hours:0)||0)+(studySecs/3600);
+  const th=Math.round((othHrs+myHrs)*10)/10;
+  // update
+  ['pulse-n','son'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=total;});
+  ['pulse-hrs','shrs'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=th;});
+  const sd=document.getElementById('sdelta');
+  if(sd) sd.textContent=studying?'أنت تذاكر الحين 🔥':total>0?total+' يذاكرون الآن':'انضم للمذاكرة!';
+  // challenge %
+  if(allUsers.length>0){
+    const wc=allUsers.filter(u=>u.challenges&&u.challenges.length>0).length;
+    const sc=document.getElementById('scmp'); if(sc) sc.textContent=Math.round((wc/allUsers.length)*100)+'%';
+  }
+  // goal
+  const gp=Math.min(Math.round((th/GOAL_HRS)*100),100);
+  const ge=document.getElementById('gpct'); if(ge) ge.textContent=gp+'%';
+  const gf=document.getElementById('gfill'); if(gf) gf.style.width=gp+'%';
+  const gs=document.getElementById('gsbb'); if(gs) gs.textContent=Math.round(th*10)/10+' من 200 ساعة — باقي '+Math.max(0,Math.round((GOAL_HRS-th)*10)/10)+' ساعة';
+  // gender
+  const males=allUsers.filter(u=>u.gender==='male').length;
+  const females=allUsers.filter(u=>u.gender==='female').length;
+  const gm=document.getElementById('gsm'); if(gm) gm.textContent=males;
+  const gff=document.getElementById('gsf'); if(gff) gff.textContent=females;
+}
+
+function updGBars(){
+  const m=allUsers.filter(u=>u.gender==='male').length;
+  const f=allUsers.filter(u=>u.gender==='female').length;
+  const t=m+f||1;
+  const mb=document.getElementById('gsmb'); if(mb) mb.style.width=Math.round((m/t)*100)+'%';
+  const fb=document.getElementById('gsfb'); if(fb) fb.style.width=Math.round((f/t)*100)+'%';
+}
+
+function updFeed(){
+  const feed=document.getElementById('feed-list'); if(!feed) return;
+  const now=new Date();
+  const items=[];
+  allUsers.filter(u=>u.last_active&&(now-new Date(u.last_active))<ACTIVE_MS&&u.nickname!==(user?user.name:'')).slice(0,3)
+    .forEach(u=>items.push({ico:u.ico,name:u.nickname,txt:'يذاكر الآن 📖'}));
+  allUsers.filter(u=>u.streak>2).sort((a,b)=>b.streak-a.streak).slice(0,2)
+    .forEach(u=>items.push({ico:u.ico,name:u.nickname,txt:'🔥 '+u.streak+' أيام متتالية'}));
+  allUsers.sort((a,b)=>b.xp-a.xp).slice(0,2)
+    .forEach(u=>items.push({ico:u.ico,name:u.nickname,txt:'🏆 '+u.xp.toLocaleString()+' XP'}));
+  if(items.length===0){feed.innerHTML='<div class="feed-empty">كن أول المتصدرين! 🚀</div>';return;}
+  feed.innerHTML=items.slice(0,5).map(a=>`<div class="feed-row"><span class="feed-ico">${a.ico}</span><span class="feed-name">${a.name}</span><span class="feed-txt">&nbsp;${a.txt}</span></div>`).join('');
+}
+
+function updLoginStats(){
+  const t=allUsers.length;
+  const h=allUsers.reduce((s,u)=>s+u.study_hours,0);
+  const x=allUsers.reduce((s,u)=>s+u.xp,0);
+  const m=allUsers.filter(u=>u.gender==='male').length;
+  const f=allUsers.filter(u=>u.gender==='female').length;
+  const e=id=>document.getElementById(id);
+  if(e('ls-total')) e('ls-total').textContent=t;
+  if(e('ls-hours')) e('ls-hours').textContent=Math.round(h*10)/10;
+  if(e('ls-xp')) e('ls-xp').textContent=x.toLocaleString();
+  if(e('ls-male')) e('ls-male').textContent=m;
+  if(e('ls-female')) e('ls-female').textContent=f;
+  // mini leaderboard
+  const lb=document.getElementById('ls-lb'); if(!lb) return;
+  const top=[...allUsers].sort((a,b)=>b.xp-a.xp).slice(0,5);
+  if(top.length===0){lb.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;padding:.4rem">كن أول المتصدرين! 🚀</div>';return;}
+  lb.innerHTML=top.map((u,i)=>`<div class="cd-lb-row"><span style="font-size:13px;min-width:22px">${MEDALS[i]||(i+1)}</span><div class="cd-lb-av ${u.gender==='male'?'m':'f'}">${u.ico}</div><span class="cd-lb-name">${u.nickname}</span><span class="cd-lb-xp">${u.xp.toLocaleString()} XP</span></div>`).join('');
+}
+
+// load sheet for login screen
+loadSheet(); setInterval(()=>{if(!user)loadSheet();},60000);
+
+// ════════════════════════════════════════
+// LEADERBOARD
+// ════════════════════════════════════════
+function switchTab(t){ lbTab=t; ['all','m','f'].forEach(x=>{const e=document.getElementById('t-'+x);if(e)e.className='lbtab'+(x===t?x==='all'?' a-all':x==='m'?' a-m':' a-f':'');}); renderLB(); }
+function switchLbType(t){ lbType=t; document.getElementById('t-s').className='lbtab'+(t==='season'?' a-s':''); document.getElementById('t-t').className='lbtab'+(t==='total'?' a-t':''); renderLB(); }
+
+function renderLB(){
+  const el=document.getElementById('lb-list'); if(!el) return;
+  const now=new Date();
+  let list=[...allUsers.map(u=>({
+    ico:u.ico,name:u.nickname,
+    xp:lbType==='season'?(u.season===CUR.num?u.season_xp:0):u.xp,
+    gender:u.gender,streak:u.streak||1,status:u.status||'',
+    isActive:u.last_active&&(now-new Date(u.last_active))<ACTIVE_MS,
+    me:user&&u.nickname===user.name,
+  }))];
+  if(user&&!list.find(u=>u.me)) list.push({ico:user.ico,name:user.name,xp:lbType==='season'?user.season_xp||0:user.xp,gender:user.gender,streak:user.streak||1,status:user.status||'',isActive:studying,me:true});
+  if(lbTab!=='all') list=list.filter(u=>u.gender===(lbTab==='m'?'male':'female'));
+  list.sort((a,b)=>b.xp-a.xp);
+  if(list.length===0){el.innerHTML='<div class="lb-empty">لا يوجد طلاب بعد</div>';return;}
+  el.innerHTML=list.slice(0,10).map((u,i)=>{
+    const rank=MEDALS[i]||(i+1);
+    const bdg=u.gender==='male'?'<span class="lb-badge bdgm">طالب</span>':'<span class="lb-badge bdgf">طالبة</span>';
+    const online=u.isActive?'<span class="lb-online"></span>':'';
+    const streak=u.streak>1?`<div class="lb-streak">🔥${u.streak}يوم</div>`:'';
+    return`<div class="lb-row"><div class="lb-rank">${rank}</div><div class="lb-av ${u.gender==='male'?'m':'f'}">${u.ico}</div><div class="lb-info"><div class="lb-name${u.me?' me':''}">${online}${bdg}${u.name}${u.me?' (أنت)':''}</div>${u.status?`<div class="lb-status">${u.status}</div>`:''}</div><div class="lb-right"><div class="lb-xp">${u.xp.toLocaleString()} XP</div>${streak}</div></div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════
+// CHALLENGES
+// ════════════════════════════════════════
+function renderCh(){
+  const g=document.getElementById('chgrid'); if(!g) return;
+  g.innerHTML='';
+  CHALLENGES.forEach((c,i)=>{
+    const done=doneCh.has(i);
+    const d=document.createElement('div');
+    d.className='chcard'+(done?' done':'');
+    d.innerHTML=`<div class="chico">${c.i}</div><div class="chttl">${c.t}</div><div class="chxp">${done?'✅ +'+c.xp+' XP':'+'+c.xp+' XP'}</div>`;
+    if(!done) d.onclick=()=>{
+      doneCh.add(i); user.xp+=c.xp; user.season_xp=(user.season_xp||0)+c.xp;
+      d.style.transform='scale(1.12)'; setTimeout(()=>d.style.transform='',300);
+      showToast('🎉 أحسنت! +'+c.xp+' XP');
+      updXP(); renderCh(); renderLB(); saveUser(studying);
+    };
+    g.appendChild(d);
+  });
+}
+
+// ════════════════════════════════════════
+// STUDY TOGGLE
+// ════════════════════════════════════════
+// ════ SMART TIMER (works even when screen is locked) ════
+const MAX_SESSION_HRS = 12; // max reasonable session
+
+function getStudyKey(name){ return 'bana_session_'+name; }
+
+function saveSession(isStudying){
+  if(!user) return;
+  const session={
+    is_studying: isStudying,
+    start_time: isStudying ? (getStoredSession()?.start_time || Date.now()) : null,
+    accumulated_secs: studySecs,
+    date: new Date().toDateString()
+  };
+  localStorage.setItem(getStudyKey(user.name), JSON.stringify(session));
+}
+
+function getStoredSession(){
+  if(!user) return null;
+  try{ return JSON.parse(localStorage.getItem(getStudyKey(user.name))); }catch(e){ return null; }
+}
+
+function calcLiveStudySecs(){
+  const s=getStoredSession();
+  if(!s||!s.is_studying||!s.start_time) return studySecs;
+  // add elapsed since start_time to accumulated
+  const elapsed=Math.floor((Date.now()-s.start_time)/1000);
+  return (s.accumulated_secs||0)+elapsed;
+}
+
+function restoreSession(){
+  const s=getStoredSession();
+  if(!s) return;
+  // reset if new day
+  if(s.date!==new Date().toDateString()){
+    localStorage.removeItem(getStudyKey(user.name));
+    studySecs=0; return;
+  }
+  if(s.is_studying&&s.start_time){
+    // was studying — calculate elapsed
+    const elapsed=Math.floor((Date.now()-s.start_time)/1000);
+    const total=(s.accumulated_secs||0)+elapsed;
+    // sanity check — max 12 hours
+    if(total/3600>MAX_SESSION_HRS){
+      studySecs=s.accumulated_secs||0;
+      showToast('⚠️ جلسة طويلة — تم الاحتساب حتى آخر حفظ');
+    } else {
+      studySecs=total;
+    }
+    // resume studying state
+    studying=true;
+    startStudyUI();
+  } else {
+    studySecs=s.accumulated_secs||0;
+  }
+}
+
+function startStudyUI(){
+  const btn=document.getElementById('sbtn'),card=document.getElementById('tcard'),dot=document.getElementById('sdot');
+  if(btn){ btn.textContent='✋ أوقف المذاكرة'; btn.className='mbtn danger'; }
+  if(card) card.style.display='block';
+  if(dot) dot.style.display='block';
+}
+
+function updTimerDisplay(){
+  // always calculate from start_time for accuracy
+  const live=studying?calcLiveStudySecs():studySecs;
+  const h=Math.floor(live/3600),m=Math.floor((live%3600)/60),s=live%60;
+  const el=document.getElementById('tnum');
+  if(el) el.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  // update studySecs to reflect live value
+  if(studying) studySecs=live;
+  updTodayHrs();
+}
+
+function toggleStudy(){
+  const btn=document.getElementById('sbtn'),card=document.getElementById('tcard'),dot=document.getElementById('sdot');
+  if(!studying){
+    // START
+    studying=true;
+    // save start_time NOW
+    const session={is_studying:true,start_time:Date.now(),accumulated_secs:studySecs,date:new Date().toDateString()};
+    localStorage.setItem(getStudyKey(user.name),JSON.stringify(session));
+    startStudyUI();
+    if(card) card.style.display='block';
+    user.is_studying=true; saveUser(true);
+    showToast('💪 يلا نذاكر!');
+    // interval only for display — time calculated from start_time
+    studyIv=setInterval(()=>{
+      updTimerDisplay();
+      const liveSecs=calcLiveStudySecs();
+      // XP every 30 min
+      if(liveSecs>0&&liveSecs%1800===0&&liveSecs!==(lastXpSecs||0)){
+        lastXpSecs=liveSecs;
+        user.xp+=25; user.season_xp=(user.season_xp||0)+25;
+        updXP(); renderLB(); showToast('⚡ +25 XP! استمر!');
+      }
+    },1000);
+  } else {
+    // STOP
+    studying=false;
+    clearInterval(studyIv);
+    // final accurate calculation
+    const finalSecs=calcLiveStudySecs();
+    // sanity check
+    if(finalSecs/3600>MAX_SESSION_HRS){
+      if(!confirm('الجلسة تجاوزت '+MAX_SESSION_HRS+' ساعات. هل تريد احتساب '+MAX_SESSION_HRS+' ساعات فقط؟')){
+        studySecs=calcLiveStudySecs(); return;
+      }
+      studySecs=MAX_SESSION_HRS*3600;
+    } else {
+      studySecs=finalSecs;
+    }
+    if(btn){ btn.textContent='ابدأ المذاكرة الحين ⚡'; btn.className='mbtn primary'; }
+    if(dot) dot.style.display='none';
+    // save final
+    const session={is_studying:false,start_time:null,accumulated_secs:studySecs,date:new Date().toDateString()};
+    localStorage.setItem(getStudyKey(user.name),JSON.stringify(session));
+    user.study_hours=(parseFloat(user.study_hours)||0)+(studySecs/3600);
+    studySecs=0; updTimerDisplay(); updTodayHrs();
+    user.is_studying=false; saveUser(false); updCommunity();
+    showToast('✅ جلسة محفوظة!');
+  }
+}
+let lastXpSecs=0;
+
+// handle page visibility change (screen lock/unlock)
+document.addEventListener('visibilitychange',()=>{
+  if(!user||!studying) return;
+  if(document.visibilityState==='visible'){
+    // recalculate from start_time when page becomes visible
+    studySecs=calcLiveStudySecs();
+    updTimerDisplay(); updTodayHrs();
+  } else {
+    // page hidden — save current state
+    saveSession(true);
+  }
+});
+
+// handle page load — restore session
+window.addEventListener('load',()=>{
+  // session restored in showHome
+});
+
+// ════════════════════════════════════════
+// QUOTES
+// ════════════════════════════════════════
+function showQ(){ const q=QUOTES[qi]; document.getElementById('qtxt').textContent='"'+q.t+'"'; document.getElementById('qauth').textContent=q.a?'— '+q.a:''; }
+function nextQ(){ qi=(qi+1)%QUOTES.length; showQ(); }
+
+// ════════════════════════════════════════
+// STATUS
+// ════════════════════════════════════════
+function onStatusChange(val){ if(!user) return; user.status=val; saveUser(studying); }
+
+// ════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast'); if(!t) return;
+  t.textContent=msg; t.classList.add('show');
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ════════════════════════════════════════
+// LOGOUT
+// ════════════════════════════════════════
+function doLogout(){
+  if(studying){studying=false;clearInterval(studyIv);}
+  if(syncIv) clearInterval(syncIv);
+  studySecs=0; doneCh=new Set(); user=null;
+  document.getElementById('sh').classList.remove('active');
+  document.getElementById('sl').classList.add('active');
+  document.getElementById('sl').scrollTop=0;
+  document.getElementById('ninp').value='';
+  document.getElementById('pinp').value='';
+  selGen=null;
+  document.getElementById('gm').className='gopt';
+  document.getElementById('gf').className='gopt';
+}
+</script>
+</body>
+</html>
