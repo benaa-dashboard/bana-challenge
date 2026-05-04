@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مجتمع بناء للمذاكرة 🎓</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple:#534AB7; --purple-l:#EEEDFE; --purple-m:#7F77DD; --purple-d:#3C3489;
+  --teal:#1D9E75; --teal-l:#E1F5EE; --teal-d:#0F6E56;
+  --blue:#185FA5; --blue-l:#E6F1FB;
+  --pink:#993556; --pink-l:#FBEAF0;
+  --red:#E24B4A; --amber:#BA7517;
+  --bg:#F4F3FC; --card:#fff;
+  --border:rgba(83,74,183,0.1); --border2:rgba(0,0,0,0.06);
+  --text:#16133A; --text2:#6B6887; --text3:#A8A6C0;
+  --sh:0 2px 16px rgba(83,74,183,0.09);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl}
+.screen{display:none}.screen.active{display:block}
+
+/* ─── LOGIN ─── */
+.lp{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:2rem 1rem;
+  background:linear-gradient(160deg,#0a0015 0%,#1a0030 40%,#0a1800 100%);
+  position:relative;overflow:hidden;
+}
+
+/* animated fire bg */
+.lp::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(226,75,74,.18) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 30% at 20% 80%, rgba(186,117,23,.12) 0%,transparent 50%),
+    radial-gradient(ellipse 40% 30% at 80% 70%, rgba(186,117,23,.1) 0%,transparent 50%);
+  pointer-events:none;
+}
+
+/* particles */
+.particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.pt{position:absolute;border-radius:50%;animation:rise var(--d,4s) ease-in infinite;opacity:0}
+@keyframes rise{
+  0%{transform:translateY(0) scale(1);opacity:.6}
+  100%{transform:translateY(-100vh) scale(0);opacity:0}
+}
+
+/* challenge badge top */
+.ch-badge-top{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(226,75,74,.15);
+  border:0.5px solid rgba(226,75,74,.35);
+  border-radius:20px;padding:6px 16px;
+  font-size:11px;font-weight:700;color:#F09595;
+  letter-spacing:1px;margin-bottom:1rem;
+  animation:badgePulse 2s ease-in-out infinite;
+}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(226,75,74,0)}50%{box-shadow:0 0 16px 4px rgba(226,75,74,.2)}}
+
+.lbox{
+  background:rgba(255,255,255,.03);
+  border:0.5px solid rgba(255,255,255,.08);
+  border-radius:28px;padding:2.5rem 2rem;
+  width:100%;max-width:420px;
+  backdrop-filter:blur(20px);position:relative;z-index:1;
+}
+
+/* countdown */
+.cdown-wrap{
+  display:flex;justify-content:center;gap:10px;
+  margin-bottom:1.5rem;
+}
+.cdown-box{
+  background:rgba(255,255,255,.06);
+  border:0.5px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:10px 14px;min-width:58px;text-align:center;
+}
+.cdown-num{font-size:22px;font-weight:800;color:#fff;display:block;line-height:1}
+.cdown-lbl{font-size:9px;color:rgba(255,255,255,.35);margin-top:3px;display:block;letter-spacing:.5px}
+
+.llogo{
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(226,75,74,.15);
+  border:2px solid rgba(226,75,74,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto 1rem;
+  box-shadow:0 0 40px rgba(226,75,74,.25);
+  animation:logoPulse 2.5s ease-in-out infinite;
+}
+@keyframes logoPulse{0%,100%{box-shadow:0 0 30px rgba(226,75,74,.2)}50%{box-shadow:0 0 50px rgba(226,75,74,.4)}}
+
+.ltitle{font-size:1.8rem;font-weight:800;color:#fff;text-align:center;margin-bottom:.3rem;letter-spacing:-1px;line-height:1.2}
+.ltitle span{color:#FF8A80}
+.ltitle .sub-line{font-size:1.1rem;color:#FFB347;display:block;font-weight:700;margin-top:2px}
+.lsub{font-size:13px;color:rgba(255,255,255,.38);text-align:center;margin-bottom:1.5rem}
+
+.flbl{font-size:11px;color:rgba(255,255,255,.45);display:block;margin-bottom:8px;letter-spacing:.5px;font-weight:600}
+
+/* icon grid */
+.igrid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:1.4rem}
+.icopt{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,.06);
+  border:1.5px solid transparent;display:flex;align-items:center;justify-content:center;
+  font-size:20px;cursor:pointer;transition:all .15s}
+.icopt:hover{background:rgba(255,255,255,.11);transform:scale(1.1)}
+.icopt.sel{border-color:#7F77DD;background:rgba(127,119,221,.22);box-shadow:0 0 12px rgba(127,119,221,.4)}
+
+/* gender */
+.grow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.3rem}
+.gopt{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:16px;padding:1rem .75rem;text-align:center;cursor:pointer;transition:all .15s}
+.gopt:hover{border-color:rgba(255,255,255,.2)}
+.gopt.selm{border-color:#378ADD;background:rgba(55,138,221,.13);box-shadow:0 0 16px rgba(55,138,221,.15)}
+.gopt.self{border-color:#D4537E;background:rgba(212,83,126,.13);box-shadow:0 0 16px rgba(212,83,126,.15)}
+.gico{font-size:26px;margin-bottom:5px}
+.glbl{font-size:14px;font-weight:700;color:#fff}
+.gsub{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px}
+.gopt.selm .glbl{color:#85B7EB}.gopt.self .glbl{color:#ED93B1}
+
+.tinp{width:100%;padding:12px 16px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);
+  color:#fff;font-size:15px;font-family:'Cairo',sans-serif;outline:none;
+  transition:border-color .15s;margin-bottom:1.25rem}
+.tinp::placeholder{color:rgba(255,255,255,.22)}
+.tinp:focus{border-color:rgba(127,119,221,.6);box-shadow:0 0 0 3px rgba(127,119,221,.1)}
+
+.err{font-size:12px;color:#F09595;text-align:center;margin-bottom:.65rem;min-height:16px}
+
+.mbtn{display:block;width:100%;border:none;border-radius:16px;
+  padding:.95rem;font-size:16px;font-weight:700;cursor:pointer;
+  font-family:'Cairo',sans-serif;transition:all .15s;
+  background:linear-gradient(135deg,#534AB7,#7F77DD);color:#fff;
+  box-shadow:0 6px 24px rgba(83,74,183,.45)}
+.mbtn:hover{opacity:.9;transform:translateY(-1px)}
+.mbtn:active{transform:scale(.98)}
+.mbtn.tl{background:linear-gradient(135deg,#1D9E75,#5DCAA5);box-shadow:0 6px 24px rgba(29,158,117,.4)}
+.mbtn.rd{background:linear-gradient(135deg,#A32D2D,#E24B4A);box-shadow:0 6px 24px rgba(226,75,74,.4)}
+
+.lnote{font-size:11px;color:rgba(255,255,255,.22);text-align:center;margin-top:.75rem}
+
+/* ─── HOME ─── */
+.hp{max-width:480px;margin:0 auto;padding:1.25rem 1rem 5rem}
+
+/* user bar */
+.ubar{
+  display:flex;align-items:center;gap:12px;
+  background:var(--card);border:0.5px solid var(--border);
+  border-radius:20px;padding:.9rem 1.1rem;margin-bottom:1rem;box-shadow:var(--sh)
+}
+.uav{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.uav.m{background:var(--blue-l)}.uav.f{background:var(--pink-l)}
+.uinf{flex:1}
+.uname{font-size:15px;font-weight:700;color:var(--text)}
+.umeta{font-size:11px;color:var(--text2);margin-top:1px}
+.uxptxt{font-size:12px;color:var(--purple);margin-top:3px;font-weight:700}
+.xpt{background:var(--purple-l);border-radius:99px;height:5px;overflow:hidden;margin-top:5px}
+.xpf{height:5px;border-radius:99px;background:var(--purple-m);transition:width .8s ease}
+.urank{font-size:22px}
+
+/* stats */
+.srow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.scard{background:var(--card);border:0.5px solid var(--border2);border-radius:16px;
+  padding:.85rem .4rem;text-align:center;box-shadow:var(--sh)}
+.snum{font-size:18px;font-weight:800;color:var(--text);display:block}
+.slbl{font-size:10px;color:var(--text2);margin-top:2px;display:block}
+.sup{font-size:10px;color:var(--teal);margin-top:2px;display:block;font-weight:700}
+
+/* gender stats */
+.gstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.gscard{border-radius:16px;padding:.9rem 1rem;box-shadow:var(--sh)}
+.gscard.ml{background:var(--blue-l);border:0.5px solid #B5D4F4}
+.gscard.fm{background:var(--pink-l);border:0.5px solid #F4C0D1}
+.gsrow{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.gsico{font-size:15px}.gsttl{font-size:11px;font-weight:700}
+.gscard.ml .gsttl{color:var(--blue)}.gscard.fm .gsttl{color:var(--pink)}
+.gsnum{font-size:24px;font-weight:800}
+.gscard.ml .gsnum{color:var(--blue)}.gscard.fm .gsnum{color:var(--pink)}
+.gssub{font-size:10px;color:var(--text2);margin-top:1px}
+.gstrack{background:rgba(0,0,0,.07);border-radius:99px;height:4px;margin-top:8px;overflow:hidden}
+.gsfill{height:4px;border-radius:99px;transition:width 1s ease}
+.gsfill.m{background:var(--blue)}.gsfill.f{background:var(--pink)}
+
+/* study */
+.tcard{background:var(--card);border:0.5px solid var(--border2);border-radius:16px;
+  padding:.85rem;text-align:center;margin-bottom:.75rem;display:none;box-shadow:var(--sh)}
+.tbig{font-size:32px;font-weight:800;color:var(--text);letter-spacing:3px;
+  font-variant-numeric:tabular-nums}
+.tsub{font-size:11px;color:var(--text2);margin-top:3px}
+
+/* goal */
+.gcard{background:var(--card);border:0.5px solid var(--border2);border-radius:16px;
+  padding:1rem 1.1rem;margin-bottom:1rem;box-shadow:var(--sh)}
+.ghdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.gttl{font-size:13px;font-weight:700;color:var(--text)}
+.gpct{font-size:13px;font-weight:800;color:var(--teal)}
+.gtrack{background:#E1F5EE;border-radius:99px;height:9px;overflow:hidden;margin-bottom:6px}
+.gfill{height:9px;border-radius:99px;background:linear-gradient(90deg,var(--teal),#5DCAA5);transition:width 1.2s ease}
+.gsb{font-size:11px;color:var(--text2)}
+
+/* challenges */
+.chgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:9px;margin-bottom:1rem}
+.chcard{background:var(--card);border:0.5px solid var(--border2);border-radius:16px;
+  padding:.9rem .6rem;text-align:center;cursor:pointer;box-shadow:var(--sh);
+  transition:border-color .2s,transform .12s,box-shadow .15s}
+.chcard:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(83,74,183,.15);border-color:var(--purple-m)}
+.chcard.done{background:var(--teal-l);border:0.5px solid var(--teal);cursor:default}
+.chcard.done:hover{transform:none;box-shadow:var(--sh)}
+.chico{font-size:22px;margin-bottom:5px}
+.chttl{font-size:11px;font-weight:700;color:var(--text);margin-bottom:3px}
+.chcard.done .chttl{color:var(--teal-d)}
+.chxp{font-size:10px;color:var(--text2)}.chcard.done .chxp{color:var(--teal);font-weight:700}
+
+/* leaderboard */
+.cbox{background:var(--card);border:0.5px solid var(--border2);border-radius:18px;
+  padding:1.1rem;margin-bottom:1rem;box-shadow:var(--sh)}
+.cttl{font-size:14px;font-weight:800;color:var(--text);margin-bottom:.75rem}
+.lbtabs{display:flex;gap:6px;margin-bottom:.85rem}
+.lbtab{flex:1;padding:7px 4px;border-radius:12px;border:0.5px solid var(--border2);
+  background:var(--bg);font-size:11px;font-weight:700;color:var(--text2);
+  cursor:pointer;text-align:center;transition:all .15s;font-family:'Cairo',sans-serif}
+.lbtab.aall{background:var(--purple-l);border-color:var(--purple-m);color:var(--purple)}
+.lbtab.am{background:var(--blue-l);border-color:#B5D4F4;color:var(--blue)}
+.lbtab.af{background:var(--pink-l);border-color:#F4C0D1;color:var(--pink)}
+.lbrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border2)}
+.lbrow:last-child{border-bottom:none}
+.lbrnk{font-size:14px;font-weight:800;min-width:26px;text-align:center;color:var(--text2)}
+.lbav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.lbav.m{background:var(--blue-l)}.lbav.f{background:var(--pink-l)}
+.lbnm{flex:1;font-size:13px;color:var(--text)}
+.lbnm.me{font-weight:800;color:var(--purple)}
+.lbbdg{font-size:10px;padding:2px 7px;border-radius:20px;margin-left:4px;font-weight:700}
+.bdgm{background:var(--blue-l);color:var(--blue)}.bdgf{background:var(--pink-l);color:var(--pink)}
+.lbxp{font-size:11px;font-weight:700;color:var(--text2)}
+
+/* quote card */
+.qcard{
+  background:linear-gradient(135deg,var(--purple-d),var(--purple));
+  border-radius:18px;padding:1.25rem 1.25rem;margin-bottom:1rem;
+  cursor:pointer;box-shadow:0 6px 24px rgba(83,74,183,.3);
+  transition:transform .15s;position:relative;overflow:hidden
+}
+.qcard::before{content:'"';position:absolute;top:-10px;left:10px;
+  font-size:80px;color:rgba(255,255,255,.07);font-family:serif;line-height:1}
+.qcard:hover{transform:translateY(-2px)}
+.qtxt{font-size:15px;font-weight:600;color:#fff;line-height:1.7;margin-bottom:.5rem;position:relative}
+.qauth{font-size:12px;color:rgba(255,255,255,.55);position:relative}
+.qhint{font-size:10px;color:rgba(255,255,255,.3);margin-top:6px;position:relative}
+
+.seclbl{font-size:11px;font-weight:800;color:var(--text2);letter-spacing:.7px;margin-bottom:.6rem}
+
+.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:#1D9E75;animation:pulse 1.8s ease-in-out infinite;margin-left:4px;vertical-align:middle}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.25;transform:scale(.6)}}
+
+.logbtn{display:block;width:100%;background:transparent;
+  border:0.5px solid var(--border2);border-radius:12px;
+  padding:.65rem;font-size:12px;color:var(--text2);
+  cursor:pointer;font-family:'Cairo',sans-serif;transition:background .15s}
+.logbtn:hover{background:rgba(0,0,0,.04)}
+
+@media(max-width:400px){.hp{padding:1rem .75rem 5rem}.lbox{padding:2rem 1.25rem}}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="sl" class="screen active">
+<div class="lp">
+  <div class="particles" id="particles"></div>
+  <div class="ch-badge-top">🔥 تحدي موسم الاختبارات — بناء</div>
+
+  <!-- LIVE COMMUNITY STATS -->
+  <div style="width:100%;max-width:420px;margin-bottom:1rem;position:relative;z-index:1;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px;">
+      <div style="background:rgba(255,255,255,.07);border:0.5px solid rgba(255,255,255,.12);border-radius:14px;padding:.75rem .5rem;text-align:center;">
+        <div style="font-size:20px;font-weight:800;color:#fff;" id="ls-total">-</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px;">طالب سجّل</div>
+      </div>
+      <div style="background:rgba(255,255,255,.07);border:0.5px solid rgba(255,255,255,.12);border-radius:14px;padding:.75rem .5rem;text-align:center;">
+        <div style="font-size:20px;font-weight:800;color:#9FE1CB;" id="ls-hours">-</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px;">ساعة مذاكرة</div>
+      </div>
+      <div style="background:rgba(255,255,255,.07);border:0.5px solid rgba(255,255,255,.12);border-radius:14px;padding:.75rem .5rem;text-align:center;">
+        <div style="font-size:20px;font-weight:800;color:#FFB347;" id="ls-xp">-</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:2px;">إجمالي XP</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+      <div style="background:rgba(55,138,221,.12);border:0.5px solid rgba(55,138,221,.25);border-radius:14px;padding:.65rem .75rem;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:18px;">👨‍🎓</span>
+        <div><div style="font-size:16px;font-weight:800;color:#85B7EB;" id="ls-male">-</div><div style="font-size:10px;color:rgba(255,255,255,.35);">طالب</div></div>
+      </div>
+      <div style="background:rgba(212,83,126,.12);border:0.5px solid rgba(212,83,126,.25);border-radius:14px;padding:.65rem .75rem;display:flex;align-items:center;gap:8px;">
+        <span style="font-size:18px;">👩‍🎓</span>
+        <div><div style="font-size:16px;font-weight:800;color:#ED93B1;" id="ls-female">-</div><div style="font-size:10px;color:rgba(255,255,255,.35);">طالبة</div></div>
+      </div>
+    </div>
+    <!-- mini leaderboard -->
+    <div style="background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.1);border-radius:14px;padding:.75rem 1rem;">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:.6rem;letter-spacing:.5px;">🏆 المتصدرون</div>
+      <div id="ls-lb"></div>
+    </div>
+  </div>
+
+  <div class="lbox">
+    <div class="llogo" id="season-icon">🌱</div>
+    <h1 class="ltitle">موسم <span id="season-name">البداية</span><span class="sub-line" id="season-quote">كل نجاح بدأ بقرار — قررت الحين!</span></h1>
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:1rem;">
+      <div style="background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;text-align:center;min-width:48px">
+        <div style="font-size:16px;font-weight:800;color:#fff;" id="cd-d">00</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.35)">يوم</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;text-align:center;min-width:48px">
+        <div style="font-size:16px;font-weight:800;color:#fff;" id="cd-h">00</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.35)">ساعة</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;text-align:center;min-width:48px">
+        <div style="font-size:16px;font-weight:800;color:#fff;" id="cd-m">00</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.35)">دقيقة</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;text-align:center;min-width:48px">
+        <div style="font-size:16px;font-weight:800;color:#fff;" id="cd-s">00</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.35)">ثانية</div>
+      </div>
+    </div>
+    <p class="lsub">انضم للتحدي وتصدّر اللوحة 🏆</p>
+
+    <span class="flbl">اختر أيقونتك</span>
+    <div class="igrid" id="igrid"></div>
+
+    <span class="flbl">الجنس</span>
+    <div class="grow">
+      <div class="gopt" id="gm" onclick="pickG('male')">
+        <div class="gico">👨‍🎓</div>
+        <div class="glbl">طالب</div>
+        <div class="gsub">ذكر</div>
+      </div>
+      <div class="gopt" id="gf" onclick="pickG('female')">
+        <div class="gico">👩‍🎓</div>
+        <div class="glbl">طالبة</div>
+        <div class="gsub">أنثى</div>
+      </div>
+    </div>
+
+    <span class="flbl">اسمك الرمزي</span>
+    <input class="tinp" id="ninp" type="text" placeholder="مثال: النمر، الفجر، الصاعق..." maxlength="20">
+    <span class="flbl">رقمك السري (4 أرقام)</span>
+    <input class="tinp" id="pinp" type="password" placeholder="اختر رقم سري تتذكره — مثال: 1234" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+    <div style="background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;margin-bottom:1.25rem;">
+      <div style="font-size:11px;color:rgba(255,255,255,.4);line-height:1.7;">
+        🔐 أول مرة؟ اختر رقماً سرياً واحفظه<br>
+        🔄 رجّاعت؟ أدخل نفس الاسم ونفس الرقم
+      </div>
+    </div>
+    <div class="err" id="err"></div>
+    <button class="mbtn rd" onclick="doLogin()">قبل التحدي — ادخل ⚔️</button>
+    <p class="lnote">الرقم السري يحفظ تقدمك من أي جهاز</p>
+  </div>
+</div>
+</div>
+
+<!-- ═══ HOME ═══ -->
+<div id="sh" class="screen">
+<div class="hp">
+
+  <div class="ubar">
+    <div class="uav" id="uav" style="position:relative">
+      <span id="studying-dot" style="display:none;position:absolute;top:0;right:0;width:10px;height:10px;background:#1D9E75;border-radius:50%;border:2px solid #fff;animation:pulse 1.5s ease-in-out infinite"></span>
+    </div>
+    <div class="uinf">
+      <div class="uname" id="uname"></div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+        <div class="umeta" id="umeta"></div>
+        <div id="streak-badge" style="font-size:11px;font-weight:700;color:#BA7517;background:#FFF3CD;padding:1px 7px;border-radius:20px;display:none">🔥 <span id="streak-num">1</span> يوم</div>
+      </div>
+      <div class="uxptxt" id="uxp">0 XP</div>
+      <div class="xpt"><div class="xpf" id="xpbar" style="width:0%"></div></div>
+      <input type="text" id="status-input" placeholder="💬 رسالتك التحفيزية..." maxlength="40"
+        style="margin-top:6px;width:100%;padding:4px 8px;border-radius:8px;border:0.5px solid var(--border2);background:var(--bg);font-size:11px;font-family:'Cairo',sans-serif;color:var(--text2);outline:none"
+        onchange="updateStatus(this.value)">
+    </div>
+    <div class="urank" id="urank">🥉</div>
+  </div>
+
+  <!-- COMMUNITY PULSE -->
+  <div style="background:linear-gradient(135deg,#1a0533,#2d1066);border-radius:16px;padding:.85rem 1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:3px;">نبض المجتمع الآن</div>
+      <div style="font-size:18px;font-weight:800;color:#fff;"><span class="pulse"></span> <span id="pulse-count">0</span> يذاكرون معك</div>
+    </div>
+    <div style="text-align:left">
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:3px;">إجمالي اليوم</div>
+      <div style="font-size:18px;font-weight:800;color:#9FE1CB;" id="pulse-hours">0</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.4)">ساعة مذاكرة</div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY FEED -->
+  <div style="background:var(--card);border:0.5px solid var(--border2);border-radius:16px;padding:.85rem 1rem;margin-bottom:1rem;box-shadow:var(--sh)">
+    <div style="font-size:12px;font-weight:800;color:var(--text);margin-bottom:.6rem">⚡ النشاط المباشر</div>
+    <div id="activity-feed" style="max-height:120px;overflow:hidden;"></div>
+  </div>
+
+  <div class="srow">
+    <div class="scard">
+      <span class="snum"><span class="pulse"></span><span id="son">0</span></span>
+      <span class="slbl">يذاكرون الحين</span>
+      <span class="sup" id="sdelta">ابدأ الآن!</span>
+    </div>
+    <div class="scard">
+      <span class="snum" id="shrs">0</span>
+      <span class="slbl">ساعة اليوم</span>
+      <span class="sup">المجتمع كله</span>
+    </div>
+    <div class="scard">
+      <span class="snum" id="scmp">0%</span>
+      <span class="slbl">أكملوا تحدي</span>
+      <span class="sup">من الكل</span>
+    </div>
+  </div>
+
+  <div class="seclbl">إحصائيات المجتمع</div>
+  <div class="gstats">
+    <div class="gscard ml">
+      <div class="gsrow"><span class="gsico">👨‍🎓</span><span class="gsttl">الطلاب</span></div>
+      <div class="gsnum" id="gsm">0</div>
+      <div class="gssub">طالب انضم</div>
+      <div class="gstrack"><div class="gsfill m" id="gsmb" style="width:50%"></div></div>
+    </div>
+    <div class="gscard fm">
+      <div class="gsrow"><span class="gsico">👩‍🎓</span><span class="gsttl">الطالبات</span></div>
+      <div class="gsnum" id="gsf">0</div>
+      <div class="gssub">طالبة انضمت</div>
+      <div class="gstrack"><div class="gsfill f" id="gsfb" style="width:50%"></div></div>
+    </div>
+  </div>
+
+  <div class="seclbl">اقتباس اليوم 💬</div>
+  <div class="qcard" onclick="nextQ()">
+    <div class="qtxt" id="qtxt"></div>
+    <div class="qauth" id="qauth"></div>
+    <div class="qhint">اضغط لاقتباس جديد</div>
+  </div>
+
+  <div class="tcard" id="tcard">
+    <div class="tbig" id="tnum">00:00:00</div>
+    <div class="tsub">وقت مذاكرتك</div>
+  </div>
+  <button class="mbtn" id="sbtn" onclick="toggleStudy()" style="margin-bottom:1rem">ابدأ المذاكرة الحين ⚡</button>
+
+  <div class="seclbl">هدف المجتمع</div>
+  <div class="gcard">
+    <div class="ghdr">
+      <span class="gttl">🎯 نوصل 200 ساعة خلال أسبوعين</span>
+      <span class="gpct" id="gpct">0%</span>
+    </div>
+    <div class="gtrack"><div class="gfill" id="gfill" style="width:0%"></div></div>
+    <span class="gsb" id="gsbb">0 من 200 ساعة — ابدأ وساهم!</span>
+  </div>
+
+  <div class="seclbl">تحديات اليوم</div>
+  <div class="chgrid" id="chgrid"></div>
+
+  <div class="cbox">
+    <div class="cttl">🏆 لوحة المتصدرين</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;">
+      <div style="font-size:12px;font-weight:700;color:var(--purple);" id="home-season-badge">🌱 موسم 1 — البداية</div>
+      <div style="font-size:11px;color:var(--text2);" id="home-season-cd"></div>
+    </div>
+    <div class="lbtabs">
+      <button class="lbtab aall" id="tseason" onclick="switchLbType('season')">🏆 موسمي</button>
+      <button class="lbtab" id="ttotal" onclick="switchLbType('total')">📊 الإجمالي</button>
+    </div>
+    <div class="lbtabs">
+      <button class="lbtab aall" id="tall" onclick="switchTab('all')">الكل</button>
+      <button class="lbtab" id="tmale" onclick="switchTab('male')">الطلاب 👨‍🎓</button>
+      <button class="lbtab" id="tfemale" onclick="switchTab('female')">الطالبات 👩‍🎓</button>
+    </div>
+    <div id="lblist"></div>
+  </div>
+
+  <button class="logbtn" onclick="doLogout()">تغيير الاسم الرمزي</button>
+</div>
+</div>
+
+<script>
+// ─── CONFIG ───
+const SHEET_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vQuljHjsYGBrOxr4GieTN6rNoAxAVLjyREu98i8ypIkH9loaZBF2oC2xuV2QKB4Epy0BWFIRULpEoPa/pub?output=csv';
+// columns: nickname, gender, ico, pin, xp, challenges, study_hours, season_xp
+
+// ─── SEASONS ───
+const SEASONS = [
+  {
+    num: 1,
+    name: 'البداية',
+    icon: '🌱',
+    quote: 'كل نجاح بدأ بقرار — قررت الحين!',
+    start: new Date('2026-05-04T00:00:00'),
+    end: new Date('2026-05-18T00:00:00'),
+  },
+  {
+    num: 2,
+    name: 'الثبات',
+    icon: '📚',
+    quote: 'الاستمرار هو السر — أنت على الطريق الصح',
+    start: new Date('2026-05-18T00:00:00'),
+    end: new Date('2026-06-01T00:00:00'),
+  },
+  {
+    num: 3,
+    name: 'التألق',
+    icon: '⭐',
+    quote: 'وصلت لهنا بجهدك — الآن تلمع أكثر',
+    start: new Date('2026-06-01T00:00:00'),
+    end: new Date('2026-06-15T00:00:00'),
+  },
+  {
+    num: 4,
+    name: 'الإنجاز',
+    icon: '🎓',
+    quote: 'أكملت الرحلة — هذا النجاح ملكك أنت',
+    start: new Date('2026-06-15T00:00:00'),
+    end: new Date('2026-06-29T00:00:00'),
+  },
+];
+
+function getCurrentSeason() {
+  const now = new Date();
+  for (const s of SEASONS) {
+    if (now >= s.start && now < s.end) return s;
+  }
+  return SEASONS[SEASONS.length - 1];
+}
+
+// getSeasonCountdown defined below
+
+const currentSeason = getCurrentSeason();
+
+// ─── DATA ───
+const ICONS=['⚡','🦁','🌙','🔥','🎯','🚀','🦅','🌟','💎','🧠','🏆','🌊'];
+const CHALLENGES=[
+  {i:'📖',t:'ذاكر ساعتين',xp:100},
+  {i:'💧',t:'8 أكواب ماء',xp:50},
+  {i:'😴',t:'نم قبل 12',xp:100},
+  {i:'📝',t:'راجع ملاحظاتك',xp:75},
+  {i:'🚶',t:'تمشية 15 دقيقة',xp:75},
+  {i:'🧘',t:'استرح 5 دقائق',xp:50},
+];
+const QUOTES=[
+  {t:'النجاح ليس نهاية الطريق، والفشل ليس نهاية العالم — الشجاعة هي الاستمرار',a:'وينستون تشرشل'},
+  {t:'الفرق بين المستحيل والممكن يكمن في عزيمة الإنسان',a:'تومي لاسوردا'},
+  {t:'لا تقارن نفسك بأحد، قارن نفسك بنفسك أمس',a:'جوردان بيترسون'},
+  {t:'كل خبير كان يوماً مبتدئاً — استمر ولا تتوقف',a:'هيلين هايز'},
+  {t:'الليالي الصعبة تصنع الأبطال الحقيقيين',a:''},
+  {t:'عقلك يستطيع تحقيق ما تؤمن به',a:'نابليون هيل'},
+  {t:'الألم مؤقت، النجاح دائم',a:''},
+];
+const MEDALS=['🥇','🥈','🥉'];
+
+// ─── STATE ───
+let selIco=ICONS[0],selGen=null,user=null;
+let doneCh=new Set(),studying=false,studySecs=0;
+let studyIv=null,pulseIv=null,syncIv=null,qi=0;
+let onlineN=0,maleN=0,femaleN=0,communityHrs=0,lbTab='all',lbType='season';
+let allUsers=[];
+
+// ─── GOOGLE SHEETS: READ ───
+async function loadSheet(){
+  try{
+    const r=await fetch(SHEET_CSV+'&t='+Date.now());
+    const txt=await r.text();
+    const lines=txt.trim().split('\n').slice(1);
+    allUsers=lines.map(l=>{
+      const c=l.split(',');
+      return{
+        nickname:(c[0]||'').trim(),
+        gender:(c[1]||'').trim(),
+        ico:(c[2]||'⚡').trim(),
+        xp:parseInt(c[4])||0,
+        season_xp:parseInt(c[5])||0,
+        season:parseInt(c[6])||1,
+        challenges:(c[7]||'').trim(),
+        study_hours:parseFloat(c[8])||0,
+        streak:parseInt(c[9])||1,
+        last_active:(c[10]||'').trim(),
+        is_studying:(c[11]||'').trim()==='true',
+        status:(c[12]||'').trim(),
+      };
+    }).filter(r=>r.nickname);
+    // totals
+    maleN=allUsers.filter(u=>u.gender==='male').length;
+    femaleN=allUsers.filter(u=>u.gender==='female').length;
+    onlineN=allUsers.length;
+    communityHrs=Math.round(allUsers.reduce((s,u)=>s+u.study_hours,0)*10)/10;
+    // restore current user data
+    if(user){
+      const me=allUsers.find(u=>u.nickname===user.name&&u.gender===user.gender);
+      if(me){
+        user.xp=me.xp;
+        user.study_hours=me.study_hours||0;
+        studySecs=Math.round((user.study_hours||0)*3600);
+        const saved=me.challenges?me.challenges.split('|').filter(x=>x!==''):[];
+        doneCh=new Set(saved.map(Number));
+      }
+      updStats();updXP();renderCh();renderLB();updGBars();updateActivityFeed();updateCommunityPulse();
+    }
+  }catch(e){console.log('sheet err',e);}
+}
+
+// ─── GOOGLE SHEETS: WRITE via Apps Script ───
+async function saveUser(){
+  if(!user)return;
+  const hrs=Math.round(((user.study_hours||0)+(studySecs/3600))*100)/100;
+  const data={
+    nickname:user.name,gender:user.gender,ico:user.ico,
+    pin:user.pin||'',
+    xp:user.xp,
+    season_xp:user.season_xp||0,
+    season:currentSeason.num,
+    challenges:[...doneCh].join('|'),
+    study_hours:hrs,
+    streak:user.streak||1,
+    is_studying:studying?'true':'false',
+    status:user.status||'',
+  };
+  localStorage.setItem('bana_user_'+user.name, JSON.stringify(data));
+  const scriptUrl='https://script.google.com/macros/s/AKfycbz9mdJtbqv7DFXyrGnF5P4e9SUOECOpTW1ouBG9zRnZFQy1M0xRpOR7gE6XqISAOICBnQ/exec';
+  try{
+    const params=new URLSearchParams({
+      nickname:data.nickname,gender:data.gender,ico:data.ico,pin:data.pin,
+      xp:data.xp,season_xp:data.season_xp,season:data.season,
+      challenges:data.challenges,study_hours:data.study_hours,
+      streak:data.streak,is_studying:data.is_studying,status:data.status,
+      activity_type:studying?'start_session':'stop_session',
+      activity_value:hrs
+    });
+    await fetch(scriptUrl+'?'+params.toString(),{mode:'no-cors'});
+  }catch(e){}
+}
+
+// ─── RESTORE FROM localStorage ───
+function restoreFromLocal(nick,gen){
+  const raw=localStorage.getItem('bana_user_'+nick);
+  if(!raw)return null;
+  try{return JSON.parse(raw);}catch(e){return null;}
+}
+
+// ─── PARTICLES ───
+const pcon=document.getElementById('particles');
+const colors=['rgba(226,75,74,.6)','rgba(186,117,23,.5)','rgba(255,138,128,.5)'];
+for(let i=0;i<25;i++){
+  const p=document.createElement('div');p.className='pt';
+  const size=3+Math.random()*5;
+  p.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*20}%;width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};--d:${3+Math.random()*6}s;animation-delay:${Math.random()*6}s`;
+  pcon.appendChild(p);
+}
+
+// ─── LOGIN SCREEN STATS ───
+async function loadLoginStats(){
+  try{
+    const r=await fetch(SHEET_CSV+'&t='+Date.now());
+    const txt=await r.text();
+    const lines=txt.trim().split('\n').slice(1).filter(l=>l.trim());
+    const users=lines.map(l=>{
+      const c=l.split(',');
+      return{name:(c[0]||'').trim(),gender:(c[1]||'').trim(),ico:(c[2]||'⚡').trim(),xp:parseInt(c[4])||0,hours:parseFloat(c[8])||0,streak:parseInt(c[9])||1,is_studying:(c[11]||'').trim()==='true',status:(c[12]||'').trim()};
+    }).filter(u=>u.name);
+
+    const total=users.length;
+    const males=users.filter(u=>u.gender==='male').length;
+    const females=users.filter(u=>u.gender==='female').length;
+    const totalHrs=users.reduce((s,u)=>s+u.hours,0);
+    const totalXP=users.reduce((s,u)=>s+u.xp,0);
+
+    const elT=document.getElementById('ls-total');
+    const elH=document.getElementById('ls-hours');
+    const elX=document.getElementById('ls-xp');
+    const elM=document.getElementById('ls-male');
+    const elF=document.getElementById('ls-female');
+    const elLB=document.getElementById('ls-lb');
+
+    if(elT)elT.textContent=total||'0';
+    if(elH)elH.textContent=Math.round(totalHrs*10)/10||'0';
+    if(elX)elX.textContent=totalXP.toLocaleString()||'0';
+    if(elM)elM.textContent=males||'0';
+    if(elF)elF.textContent=females||'0';
+
+    // mini leaderboard top 5
+    if(elLB){
+      elLB.innerHTML='';
+      const MEDALS=['🥇','🥈','🥉'];
+      const top=[...users].sort((a,b)=>b.xp-a.xp).slice(0,5);
+      if(top.length===0){
+        elLB.innerHTML='<div style="text-align:center;font-size:12px;color:rgba(255,255,255,.3);padding:.5rem 0">كن أول المتصدرين! 🚀</div>';
+      } else {
+        top.forEach((u,i)=>{
+          const row=document.createElement('div');
+          row.style.cssText='display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid rgba(255,255,255,.07)';
+          if(i===top.length-1)row.style.borderBottom='none';
+          const medal=MEDALS[i]||(i+1);
+          const gColor=u.gender==='male'?'rgba(55,138,221,.2)':'rgba(212,83,126,.2)';
+          row.innerHTML=`
+            <span style="font-size:13px;min-width:22px;text-align:center;">${medal}</span>
+            <span style="width:28px;height:28px;border-radius:50%;background:${gColor};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">${u.ico}</span>
+            <span style="flex:1;font-size:12px;color:rgba(255,255,255,.85);font-weight:600">${u.name}</span>
+            <span style="font-size:11px;color:rgba(255,255,255,.4)">${u.xp.toLocaleString()} XP</span>
+          `;
+          elLB.appendChild(row);
+        });
+      }
+    }
+    // store for login check
+    allUsers=users.map(u=>({nickname:u.name,gender:u.gender,ico:u.ico,xp:u.xp,study_hours:u.hours,challenges:''}));
+  }catch(e){
+    const elT=document.getElementById('ls-total');
+    if(elT)elT.textContent='...';
+  }
+}
+
+// load on page open + refresh every 60 sec
+loadLoginStats();
+setInterval(loadLoginStats, 60000);
+
+// ─── SEASON UI ───
+function updateSeasonUI(){
+  const s=currentSeason;
+  // login screen
+  const sico=document.getElementById('season-icon');
+  const snm=document.getElementById('season-name');
+  const sqt=document.getElementById('season-quote');
+  if(sico)sico.textContent=s.icon;
+  if(snm)snm.textContent=s.name;
+  if(sqt)sqt.textContent=s.quote;
+  // home badge
+  const hb=document.getElementById('home-season-badge');
+  if(hb)hb.textContent=s.icon+' موسم '+s.num+' — '+s.name;
+  // countdown from NOW to season end
+  const cd=getSeasonCountdown(s);
+  const hcd=document.getElementById('home-season-cd');
+  if(hcd)hcd.textContent='ينتهي بعد '+cd.d+'ي '+String(cd.h).padStart(2,'0')+':'+String(cd.m).padStart(2,'0')+':'+String(cd.s).padStart(2,'0');
+  // login countdown boxes - Days Hours Minutes Seconds
+  const cdd=document.getElementById('cd-d');
+  const cdh=document.getElementById('cd-h');
+  const cdm=document.getElementById('cd-m');
+  const cds=document.getElementById('cd-s');
+  if(cdd)cdd.textContent=String(cd.d).padStart(2,'0');
+  if(cdh)cdh.textContent=String(cd.h).padStart(2,'0');
+  if(cdm)cdm.textContent=String(cd.m).padStart(2,'0');
+  if(cds)cds.textContent=String(cd.s).padStart(2,'0');
+}
+
+// Fix getSeasonCountdown to use real current time
+function getSeasonCountdown(season){
+  const now=new Date();
+  const diff=season.end-now;
+  if(diff<=0)return{d:0,h:0,m:0,s:0};
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  return{d,h,m,s};
+}
+
+updateSeasonUI();
+setInterval(updateSeasonUI,1000);
+
+function switchLbType(t){
+  lbType=t;
+  document.getElementById('tseason').className='lbtab'+(t==='season'?' aall':'');
+  document.getElementById('ttotal').className='lbtab'+(t==='total'?' aall':'');
+  renderLB();
+}
+
+// ─── ICONS ───
+const ig=document.getElementById('igrid');
+ICONS.forEach(ic=>{
+  const d=document.createElement('div');
+  d.className='icopt'+(ic===selIco?' sel':'');
+  d.textContent=ic;
+  d.onclick=()=>{selIco=ic;document.querySelectorAll('.icopt').forEach(x=>x.classList.remove('sel'));d.classList.add('sel')};
+  ig.appendChild(d);
+});
+
+function pickG(g){
+  selGen=g;
+  document.getElementById('gm').className='gopt'+(g==='male'?' selm':'');
+  document.getElementById('gf').className='gopt'+(g==='female'?' self':'');
+}
+
+async function doLogin(){
+  const nick=document.getElementById('ninp').value.trim();
+  const pin=document.getElementById('pinp').value.trim();
+  const err=document.getElementById('err');
+  if(!selGen){err.textContent='اختر طالب أو طالبة أولاً';return}
+  if(!nick){err.textContent='اكتب اسمك الرمزي أولاً';return}
+  if(nick.length<2){err.textContent='الاسم قصير — على الأقل حرفين';return}
+  if(!pin||pin.length!==4||isNaN(pin)){err.textContent='الرقم السري يجب أن يكون 4 أرقام';return}
+  err.textContent='جاري التحقق...';
+
+  try{
+    const r=await fetch(SHEET_CSV+'&t='+Date.now());
+    const txt=await r.text();
+    const lines=txt.trim().split('\n').slice(1).filter(l=>l.trim());
+    const liveUsers=lines.map(l=>{
+      const c=l.split(',');
+      return{
+        name:(c[0]||'').trim(),
+        gender:(c[1]||'').trim(),
+        ico:(c[2]||'⚡').trim(),
+        pin:(c[3]||'').trim(),
+        xp:parseInt(c[4])||0,
+        challenges:(c[5]||'').trim(),
+        study_hours:parseFloat(c[6])||0
+      };
+    }).filter(u=>u.name);
+
+    allUsers=liveUsers.map(u=>({nickname:u.name,gender:u.gender,ico:u.ico,xp:u.xp,challenges:u.challenges,study_hours:u.study_hours}));
+
+    // find existing user with same name
+    const existingByName=liveUsers.find(u=>u.name.toLowerCase()===nick.toLowerCase());
+
+    if(existingByName){
+      // name exists — check pin matches
+      if(existingByName.pin!==pin){
+        err.textContent='❌ الرقم السري غلط — حاول مرة ثانية';
+        return;
+      }
+      // correct pin — restore their data
+      // reset season_xp if new season
+      const sxp=(existingByName.season===currentSeason.num)?(existingByName.season_xp||0):0;
+      user={ico:existingByName.ico,name:existingByName.name,gender:existingByName.gender,xp:existingByName.xp,season_xp:sxp,study_hours:existingByName.study_hours,pin,streak:existingByName.streak||1,status:existingByName.status||'',is_studying:false};
+      doneCh=new Set(existingByName.challenges?existingByName.challenges.split('|').filter(x=>x!=='').map(Number):[]);
+      studySecs=0; // start fresh each session, hours accumulate in study_hours
+      selIco=existingByName.ico;
+    } else {
+      // new user — register them
+      user={ico:selIco,name:nick,gender:selGen,xp:0,study_hours:0,pin,streak:1,status:'',is_studying:false};
+      doneCh=new Set();studySecs=0;
+    }
+    err.textContent='';
+  }catch(e){
+    err.textContent='';
+    user={ico:selIco,name:nick,gender:selGen,xp:0,study_hours:0,pin,streak:1,status:'',is_studying:false};
+    doneCh=new Set();studySecs=0;
+  }
+  showHome();
+  saveUser();
+  loadSheet();
+}
+
+function showHome(){
+  document.getElementById('sl').classList.remove('active');
+  document.getElementById('sh').classList.add('active');
+  const isM=user.gender==='male';
+  const av=document.getElementById('uav');
+  av.textContent=user.ico;av.className='uav '+(isM?'m':'f');
+  document.getElementById('uname').textContent=user.ico+' '+user.name;
+  document.getElementById('umeta').textContent=isM?'👨‍🎓 طالب':'👩‍🎓 طالبة';
+  const sb=document.getElementById('streak-badge');
+  const sn=document.getElementById('streak-num');
+  if(sb&&sn&&(user.streak||0)>0){sb.style.display='inline-flex';sn.textContent=user.streak;}
+  const si=document.getElementById('status-input');
+  if(si&&user.status)si.value=user.status;
+  updStats();updXP();renderCh();renderLB();startPulse();
+  showQ();updGBars();updateActivityFeed();updateCommunityPulse();
+  if(syncIv)clearInterval(syncIv);
+  syncIv=setInterval(()=>{loadSheet();updateActivityFeed();updateCommunityPulse();},60000);
+}
+
+function updateStatus(val){user.status=val;saveUser();}
+function updateStudyingDot(){const dot=document.getElementById('studying-dot');if(dot)dot.style.display=studying?'block':'none';}
+function updateCommunityPulse(){
+  // count studying users + self if studying
+  const studyingUsers=allUsers.filter(u=>u.is_studying);
+  const selfAlreadyIn=studyingUsers.find(u=>u.nickname===user.name);
+  const sn=studyingUsers.length+(studying&&!selfAlreadyIn?1:0);
+  // total hours = sum of all users study_hours (from sheet, real accumulated)
+  const totalFromSheet=allUsers.reduce((s,u)=>s+(parseFloat(u.study_hours)||0),0);
+  const myExtra=studySecs/3600; // current session not yet saved
+  const th=Math.round((totalFromSheet+myExtra)*10)/10;
+  const pc=document.getElementById('pulse-count');
+  const ph=document.getElementById('pulse-hours');
+  const son=document.getElementById('son');
+  const shrs=document.getElementById('shrs');
+  if(pc)pc.textContent=sn;
+  if(ph)ph.textContent=th;
+  if(son)son.textContent=sn;
+  if(shrs)shrs.textContent=th;
+  // update 200hr goal
+  const GOAL=200;
+  const pct=Math.min(Math.round((th/GOAL)*100),100);
+  const gp=document.getElementById('gpct');
+  const gf=document.getElementById('gfill');
+  const gs=document.getElementById('gsbb');
+  if(gp)gp.textContent=pct+'%';
+  if(gf)gf.style.width=pct+'%';
+  if(gs)gs.textContent=Math.round(th*10)/10+' من 200 ساعة — باقي '+Math.max(0,Math.round((GOAL-th)*10)/10)+' ساعة';
+}
+function updateActivityFeed(){
+  const feed=document.getElementById('activity-feed');if(!feed)return;
+  const items=[];
+  allUsers.filter(u=>u.is_studying).slice(0,3).forEach(u=>items.push({ico:u.ico,name:u.nickname,txt:'يذاكر الآن 📖'}));
+  allUsers.filter(u=>u.streak>2).sort((a,b)=>b.streak-a.streak).slice(0,2).forEach(u=>items.push({ico:u.ico,name:u.nickname,txt:'🔥 '+u.streak+' أيام متتالية'}));
+  allUsers.sort((a,b)=>b.xp-a.xp).slice(0,2).forEach(u=>items.push({ico:u.ico,name:u.nickname,txt:'🏆 '+u.xp.toLocaleString()+' XP'}));
+  if(items.length===0){feed.innerHTML='<div style="font-size:12px;color:var(--text2);text-align:center;padding:.5rem">كن أول المتصدرين! 🚀</div>';return;}
+  feed.innerHTML=items.slice(0,5).map(a=>'<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--border2);font-size:12px;"><span style="font-size:15px">'+a.ico+'</span><span style="font-weight:700;color:var(--text)">'+a.name+'</span><span style="color:var(--text2)">'+a.txt+'</span></div>').join('');
+}
+
+function updStats(){
+  document.getElementById('son').textContent=onlineN;
+  document.getElementById('shrs').textContent=communityHrs;
+  document.getElementById('gsm').textContent=maleN;
+  document.getElementById('gsf').textContent=femaleN;
+  const pct=communityHrs>0?Math.min(Math.round((communityHrs/1000)*100),100):0;
+  document.getElementById('gpct').textContent=pct+'%';
+  document.getElementById('gfill').style.width=pct+'%';
+  document.getElementById('gsbb').textContent=communityHrs>0?communityHrs+' من 1,000 ساعة — باقي '+(1000-communityHrs):'0 من 1,000 ساعة — ابدأ وساهم!';
+  const comp=doneCh.size>0?Math.round((doneCh.size/CHALLENGES.length)*100):0;
+  document.getElementById('scmp').textContent=comp+'%';
+}
+
+function updXP(){
+  const xp=user.xp;
+  document.getElementById('uxp').textContent=xp+' XP';
+  document.getElementById('xpbar').style.width=Math.min(Math.round((xp/500)*100),100)+'%';
+  document.getElementById('urank').textContent=xp>=400?'🥇':xp>=200?'🥈':'🥉';
+}
+
+function showQ(){
+  document.getElementById('qtxt').textContent='"'+QUOTES[qi].t+'"';
+  document.getElementById('qauth').textContent=QUOTES[qi].a?'— '+QUOTES[qi].a:'';
+}
+function nextQ(){qi=(qi+1)%QUOTES.length;showQ()}
+
+function renderCh(){
+  const g=document.getElementById('chgrid');g.innerHTML='';
+  CHALLENGES.forEach((c,i)=>{
+    const done=doneCh.has(i);
+    const d=document.createElement('div');
+    d.className='chcard'+(done?' done':'');
+    d.innerHTML=`<div class="chico">${c.i}</div><div class="chttl">${c.t}</div><div class="chxp">${done?'✅ +'+c.xp+' XP':'+'+c.xp+' XP'}</div>`;
+    if(!done)d.onclick=()=>{doneCh.add(i);user.xp+=c.xp;user.season_xp=(user.season_xp||0)+c.xp;updXP();renderCh();renderLB();updStats();saveUser();};
+    g.appendChild(d);
+  });
+}
+
+function switchTab(t){
+  lbTab=t;
+  document.getElementById('tall').className='lbtab'+(t==='all'?' aall':'');
+  document.getElementById('tmale').className='lbtab'+(t==='male'?' am':'');
+  document.getElementById('tfemale').className='lbtab'+(t==='female'?' af':'');
+  renderLB();
+}
+
+function renderLB(){
+  const el=document.getElementById('lblist');el.innerHTML='';
+  const useSeasonXP=lbType==='season';
+  let list=[...allUsers.map(u=>({
+    ico:u.ico,name:u.nickname,
+    xp:useSeasonXP?(u.season===currentSeason.num?u.season_xp||0:0):u.xp,
+    totalxp:u.xp,gender:u.gender,
+    streak:u.streak||1,status:u.status||'',
+    is_studying:u.is_studying||false,
+    me:u.nickname===user.name&&u.gender===user.gender
+  }))];
+  if(!list.find(u=>u.me)){
+    list.push({ico:user.ico,name:user.name,
+      xp:useSeasonXP?user.season_xp||0:user.xp,
+      totalxp:user.xp,gender:user.gender,
+      streak:user.streak||1,status:user.status||'',
+      is_studying:studying,me:true});
+  }
+  if(lbTab!=='all')list=list.filter(x=>x.gender===lbTab);
+  list.sort((a,b)=>b.xp-a.xp);
+  if(list.length===0){
+    el.innerHTML='<div style="text-align:center;padding:1.5rem 0;font-size:13px;color:var(--text2)">لا يوجد طلاب في هذه الفئة بعد</div>';
+    return;
+  }
+  list.slice(0,8).forEach((item,i)=>{
+    const row=document.createElement('div');row.className='lbrow';
+    const rank=MEDALS[i]||(i+1);
+    const avc=item.gender==='male'?'m':'f';
+    const bdg=item.gender==='male'?'<span class="lbbdg bdgm">طالب</span>':'<span class="lbbdg bdgf">طالبة</span>';
+    const xpLabel=useSeasonXP?'موسمي':'إجمالي';
+    const streakTxt=item.streak>1?`<span style="font-size:10px;color:#BA7517;margin-right:4px">🔥${item.streak}يوم</span>`:'';
+    const statusTxt=item.status?`<div style="font-size:10px;color:var(--text2);margin-top:1px">${item.status}</div>`:'';
+    const studyingTxt=item.is_studying?`<span style="width:7px;height:7px;background:#1D9E75;border-radius:50%;display:inline-block;margin-right:4px;animation:pulse 1.5s ease-in-out infinite"></span>`:'';
+    row.innerHTML=`<div class="lbrnk">${rank}</div><div class="lbav ${avc}">${item.ico}</div><div class="lbnm${item.me?' me':''}" style="flex:1">${studyingTxt}${bdg}${item.name}${item.me?' (أنت)':''}${streakTxt}${statusTxt}</div><div class="lbxp">${item.xp.toLocaleString()} XP</div>`;
+    el.appendChild(row);
+  });
+}
+
+function updGBars(){
+  const total=maleN+femaleN||1;
+  document.getElementById('gsmb').style.width=Math.round((maleN/total)*100)+'%';
+  document.getElementById('gsfb').style.width=Math.round((femaleN/total)*100)+'%';
+}
+
+function toggleStudy(){
+  studying=!studying;
+  const btn=document.getElementById('sbtn');
+  const card=document.getElementById('tcard');
+  if(studying){
+    btn.textContent='أوقف المذاكرة ✋';btn.className='mbtn rd';
+    card.style.display='block';
+    document.getElementById('sdelta').textContent='أنت تذاكر الحين 🔥';
+    studyIv=setInterval(()=>{
+      studySecs++;
+      const h=Math.floor(studySecs/3600);
+      const m=Math.floor((studySecs%3600)/60);
+      const s=studySecs%60;
+      const tn=document.getElementById('tnum');
+      if(tn)tn.textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+      // every 30 min add 0.5hr to community + 25XP
+      // every 5 min save progress
+      if(studySecs%300===0){
+        user.study_hours=(parseFloat(user.study_hours)||0)+(300/3600);
+        updateCommunityPulse();
+        saveUser();
+      }
+      if(studySecs%1800===0){
+        user.xp+=25;user.season_xp=(user.season_xp||0)+25;
+        updStats();updXP();renderLB();
+      }
+    },1000);
+  }else{
+    btn.textContent='ابدأ المذاكرة الحين ⚡';btn.className='mbtn';
+    clearInterval(studyIv);
+    // save remaining session seconds to study_hours
+    if(studySecs>0){
+      user.study_hours=(parseFloat(user.study_hours)||0)+(studySecs/3600);
+      studySecs=0;
+    }
+    const tn=document.getElementById('tnum');
+    if(tn)tn.textContent='00:00:00';
+    document.getElementById('sdelta').textContent='انضم للمذاكرة!';
+    updateStudyingDot();
+    updateCommunityPulse();
+    saveUser();
+  }
+}
+
+function startPulse(){
+  if(pulseIv)clearInterval(pulseIv);
+  pulseIv=setInterval(()=>{
+    if(studying){
+      document.getElementById('son').textContent=onlineN;
+    }
+  },4000);
+}
+
+function doLogout(){
+  studying=false;studySecs=0;doneCh=new Set();
+  clearInterval(studyIv);clearInterval(pulseIv);
+  document.getElementById('sh').classList.remove('active');
+  document.getElementById('sl').classList.add('active');
+  document.getElementById('ninp').value='';
+  selGen=null;
+  document.getElementById('gm').className='gopt';
+  document.getElementById('gf').className='gopt';
+}
+</script>
+</body>
+</html>
